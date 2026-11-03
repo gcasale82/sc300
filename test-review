@@ -1,0 +1,119 @@
+sc300 test quiz review
+The az vm identity assign -g myResourceGroup -n myVm command assigns a system-assigned identity to the virtual machine.
+
+The az identity create -g myResourceGroup -n myVmIdentity command creates a user-assigned identity, and az vm update -n myVM -g myResourceGroup --set identity.type='UserAssigned' sets an existing user-assigned identity to a virtual machine.
+
+Using the Update-AzVM cmdlet will allow you to remove the managed identities for your virtual machines
+
+Only users can be owners of enterprise apps. Users and service principals can be owners of app registrations. Groups cannot be assigned as owners of either. An app registration is the process to register an app, but will not allow you to assign owners.
+
+You need to ensure that Microsoft Entra users can authenticate to App1 by using Microsoft Entra Multifactor authentication (MFA).
+Deploy a Microsoft Entra Application Proxy.
+
+Using Conditional Access App Control effectively prevents downloads on unmanaged devices, directly meeting the requirement to secure sensitive documents
+emergency account : Use a different multifactor authentication (MFA) method than other accounts, exclude the account from Conditional Access policies, and configure alerts on the activity of the account.
+PIM : You can review all the role assignments and activations that occurred during the previous 30 days from the Privileged Identity Management blade.
+
+To track a provisioned user, you can use the information captured in Microsoft Entra provisioning logs to help find a solution. - AADProvisioningLogs
+
+A Microsoft Entra ID P1 or P2 license at least the Microsoft Entra Report Reader role are prerequisites to getting access to a Microsoft Entra workbook (existing set up of Azure Monitor, and you want to add Microsoft Entra log data).
+
+Dynamic user and dynamic device are the only two membership types that allow the use of dynamic membership rules to automatically add and remove members.
+
+Dynamic membership for user or device groups is supported in the Microsoft Entra admin center and the Microsoft Intune admin center. The Microsoft 365 admin center can create groups but does not support dynamic membership rules.
+
+To allow the Contoso users to connect to your tenant, but restrict other external users, you must set the default settings to block all inbound and outbound access, and then set the specific organizational settings to override the default settings to block all inbound and outbound access.
+Conditional Access policies can be triggered by users with specific device operating systems, users attempting to access specific applications, and by specific IP location information.
+
+In Microsoft Defender for Cloud Apps, the four risk categories used to score cloud apps are:
+• General (covers factors like consumer popularity and data center locales)
+• Security (covers security controls, encryption, and authentication standards)
+• Compliance (covers industry standards, certifications, and regulations like SOC 2, ISO 27001, and HIPAA)
+• Legal (covers data retention policies, privacy regulations, and DMCA compliance)
+
+Microsoft Defender for Cloud Apps. get data onto the Cloud Discovery dashboard -> snapshot report
+
+The lockout duration, reset account lockout, lockout threshold, and account lockout threshold must be properly configured if pass-through is used to prevents on-premises Active Directory accounts from being locked out by brute force attacks on Microsoft Entra accounts.
+
+The rest of the options are valid, but they cannot be modified, nor do they relate to smart lockout.
+
+high affinity certificate X509SKI
+
+When Conditional Access policy or group membership changes must be applied to certain users immediately, you have two options. You can run the Revoke-MgUserSign cmdlet, or you can select Revoke Session on the user profile page.
+
+User risk-based Conditional Access policy : Require password change ,Require risk remediation ,block access
+Sign-in risk-based Conditional Access policy: require mfa, require re-authentication, block access
+
+The Global Secure Access client supports Windows 10/11 devices that are Microsoft Entra joined or hybrid joined, and macOS devices registered to Entra ID via Company Portal. Windows devices that are only Entra registered are not supported. Therefore, the client can be installed on Device1 and Device3.
+
+To enable Microsoft Entra Private Access, you must deploy one or more private network connectors on Windows Server machines within the on-premises network. These connectors establish a secure channel to Microsoft’s Global Secure Access service, allowing authorized users to reach on-premises applications without a VPN. The Global Secure Access client is for user devices, not servers. The Microsoft Entra provisioning agent is unrelated to Private Access, and the Windows Remote Access role is the legacy VPN approach being replaced.
+
+Direct federation and one-time passcodes are valid authentication methods for a connected organization.
+
+Client credentials flow and authorization code flow are both OAuth flows and are used for application authentication.
+
+As external users are not yet in your directory, you must share a My Access portal link to allow them to request an access package.
+
+The option value of the parameter RequestType “AdminAdd” must be used in the New-MgEntitlementManagementAccessPackageResourceRequestCatalog cmdlet to add a group to a catalog
+
+Enabling the Lifecycle of external users setting in entitlement management ensures that guest accounts are removed automatically when they no longer have any active access package assignments.
+
+Access review activities are recorded and available in the Microsoft Entra audit logs. You can filter the audit data by category, activity type, and date range.
+
+An administrator confirming that a user is compromised indicates that an administrator selected Confirm user compromised in the Risky users report or used the riskyUsers API. It is included as a nonpremium sign-in risk detection type, which are included with Microsoft Entra ID P1 licenses. Leaked credentials and a suspicious API Traffic are both considered user risk detection types. Unknown devices are NOT considered as sign-in risks. Which risk is classified as a sign-in risk? -> an administrator confirming that a user is compromised
+
+The Global Secure Access client supports Windows 10/11 (Entra joined or hybrid joined), macOS (via Company Portal), and Android (via Microsoft Tunnel for MAM integration). Linux devices are not supported. Therefore, the correct set of devices is Windows 11, macOS, and Android.
+
+--
+You need to investigate a sign-in that occurred 45 days ago and identify which risk detections caused it to be flagged.
+
+Which Microsoft Entra ID Protection report should you open?
+
+Select only one answer.
+
+-> Risk detections
+--
+
+
+
+https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-to-configure-managed-identities?pivots=qs-configure-portal-windows-vm
+
+https://learn.microsoft.com/azure/active-directory/manage-apps/manage-self-service-access
+
+https://learn.microsoft.com/training/modules/plan-design-integration-of-enterprise-apps-for-sso/
+
+https://learn.microsoft.com/azure/active-directory/app-provisioning/configure-automatic-user-provisioning-portal
+
+https://learn.microsoft.com/azure/active-directory/app-provisioning/plan-auto-user-provisioning
+
+https://learn.microsoft.com/azure/active-directory/authentication/howto-mfa-getstarted
+
+https://learn.microsoft.com/training/modules/secure-aad-users-with-mfa/
+
+https://learn.microsoft.com/azure/active-directory/develop/scopes-oidc#the-default-scope
+
+https://learn.microsoft.com/training/modules/implement-app-registration/
+
+https://learn.microsoft.com/en-us/defender-cloud-apps/risk-score
+
+https://learn.microsoft.com/training/modules/microsoft-cloud-app-security/
+
+https://learn.microsoft.com/defender-cloud-apps/set-up-cloud-discovery
+
+https://learn.microsoft.com/defender-cloud-apps/create-snapshot-cloud-discovery-reports
+
+https://learn.microsoft.com/azure/active-directory/authentication/howto-password-smart-lockout
+
+https://learn.microsoft.com/training/modules/manage-user-authentication/7-configure-smart-lockout-thresholds
+
+https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-policies
+
+https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-install-windows-client
+
+https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-install-macos-client
+
+https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-install-android-client
+
+https://learn.microsoft.com/en-us/entra/architecture/gsa-deployment-guide-private-access
+
+https://learn.microsoft.com/en-us/entra/architecture/gsa-deployment-guide-internet-access
