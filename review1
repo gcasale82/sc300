@@ -42,4 +42,53 @@ Enterprise application roles can be assigned to security groups. Group1 is a sec
 App Owners only User ; Enterprise app assignment : Users and security or mail-enabled security groups.
 Microsoft Entra Access Reviews automatically flatten nested groups - User1 is an owner assigned as a reviewer and is also a user member in scope. A fallback reviewer is needed when the group has no owner, not merely because an owner is also a member.
 In Microsoft Entra ID, an owner who is assigned as a reviewer can review their own access, unless self-review is explicitly disabled in the review settings. The lack of a Fallback reviewer doesn't block this because the group does have valid owners
-q 503
+---
+Microsoft Entra ID Protection signals have a maximum retention of 90 days: risky sign-ins are kept 7 days on Free, 30 days on P1 and 90 days on P2
+Global Administrator does not automatically have permissions for custom security attributes
+--
+Microsoft Entra ID - Custom Security Attributes Roles Summary
+
+1. Attribute Definition Administrator
+- Core Purpose: Defines the structure of custom security attributes.
+- Key Permissions:
+  * Creates and manages attribute sets.
+  * Defines new attributes (name, data type, and allowed values).
+  * Deactivates or activates custom attributes.
+- Key Restrictions:
+  * CANNOT assign attribute values to users, devices, or applications.
+  * CANNOT read attribute values already assigned to objects.
+
+2. Attribute Assignment Administrator
+- Core Purpose: Assigns the values of custom security attributes to objects.
+- Key Permissions:
+  * Reads custom attribute definitions.
+  * Adds, updates, or removes attribute values on users, service principals, and devices.
+- Key Restrictions:
+  * CANNOT create or define new attributes.
+  * CANNOT modify the structural settings or configuration of attribute sets.
+
+Security Note:
+Microsoft separates these roles to enforce a strict separation of duties and a least-privilege security model. By default, even a Global Administrator does not have these permissions and must be explicitly assigned to one or both of these roles.
+
+--
+apps support automatic provisioning of Microsoft Entra users -> SCIM2.0
+--
+The Conditional Access What If tool simulates a sign-in with specified conditions and reports which Conditional Access policies apply
+--
+grant users in the Contoso East division access to Microsoft SharePoint Online sites in the Contoso West tenant. The solution must not require any additional Microsoft 365 licenses.
+Invite the Contose East users as guests in the Contoso West tenant
+--
+Microsoft Defender for Cloud Apps session policies require a Microsoft Entra Conditional Access policy to route the applicable application traffic through Conditional Access App Control. That Conditional Access policy establishes the permissions and traffic control required for session control to operate.
+--
+technical requirements concerning the likelihood that user identities have been compromised
+users-> register MFA , you must configure -> user risk Conditional access policy 
+explanation : User risk is the probability that an identity is compromised, so the requirement calls for a user risk-based Conditional Access policy with the Require password change grant. A sign-in risk policy evaluates one sign-in, and password protection only blocks weak passwords. The forced change is a secure password change: the user first completes MFA and then changes the password. This flow doesn't use SSPR, and users who aren't registered for MFA can't complete it. Users must therefore register for MFA first, even though Contoso also plans to deploy SSPR (an SSPR reset also remediates user risk, but it isn't the mechanism this policy uses).
+---
+(User Administrator, Device Administrators and Identity Governance Administrator) are Microsoft Entra roles, which you assign in the Microsoft Entra admin center. 
+Records Management and Quarantine Administrator are default role groups available in the Microsoft Purview portal 
+Endpoint Security Manager and Intune Role Administrator are Intune built-in RBAC roles, which you assign in the Microsoft Intune admin center
+--
+Eligible PIM assignments require activation; they do not grant the role automatically. Activation approval is required, and a delegated approver cannot approve their own role-activation request,
+A time-bound eligible user can activate the role only within the assignment's start and end dates, so the five-hour activation maximum 
+PIM approval request last 1 day
+q18
