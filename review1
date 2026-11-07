@@ -91,4 +91,69 @@ Endpoint Security Manager and Intune Role Administrator are Intune built-in RBAC
 Eligible PIM assignments require activation; they do not grant the role automatically. Activation approval is required, and a delegated approver cannot approve their own role-activation request,
 A time-bound eligible user can activate the role only within the assignment's start and end dates, so the five-hour activation maximum 
 PIM approval request last 1 day
-q18
+---
+MFA is required when activating this eligible Global administrator role.
+Approval to activate is disabled, so no approver, is required. User (Global Administrator) can manage the role assignment,
+User (Privileged Authentication Administrator) can't manage role assignment: that role manages authentication methods, while role assignments are managed by roles such as Privileged Role Administrator or Global Administrator
+
+notification when a user downloads more than 50 files from Site1 within one minute -> Microsoft Defender for Cloud Apps activity policy
+
+Microsoft Entra Connect enables Microsoft Entra hybrid join by synchronizing the required on-premises AD DS device information and configuring the service connection point. Setting the Intune MDM user scope enables automatic MDM enrollment for eligible Microsoft Entra users and their hybrid-joined Windows devices
+
+The allow or block domains can receive B2B collaboration invitations -> Collaboration restrictions in External collaboration settings->Collaboration restrictions, which also control who can invite guests and guest user access restrictions. 
+MAU billing requires  Linked subscriptions.
+--
+never to install the Password Protection proxy and the application proxy connector on the same machine
+password protection proxy requires internet access (DC should not have)
+custom banned password list can be administered only in the Microsoft Entra admin center (Entra ID > Authentication methods > Password protection)
+
+wrong case :A fallback reviewer receives an access review when the user being reviewed has no manager specified in Microsoft Entra ID. Separate role-based reviews do not configure the department managers as the users' managers or otherwise change the reviewer routing, so they do not ensure that each department manager receives reviews for that department.
+wrong case: The Members (self) reviewer type requires each member to review their own access. It does not assign the review to each user’s manager, so it cannot ensure that department managers receive the reviews for their departments
+wrong : Solution: Add every manager as a fallback reviewer.
+OK: Setting each IT administrator’s manager property to the manager of the appropriate department causes those department managers to receive the reviews instead of the fallback reviewer.
+
+You need to ensure that connections to  bypass Microsoft.com Global Secure Access.-> Microsoft traffic profile only
+
+Azure RBAC role assignments target a security principal's Microsoft Entra service principal, which is available regardless of region, so Managed1, Managed2, and the system-assigned identities of VM1 and VM2 can all receive the Owner role at the RG1 scope. VM3 has no system-assigned identity of its own -- it only uses the attached user-assigned identity Managed1, which is already the principal that receives the role -- so VM3 cannot itself be selected as a separate principal, and VM4 has no identity at all. For the same reason a user-assigned managed identity's service principal is region-independent, Managed2 (West US) can be attached to a virtual machine in any region, so VM1, VM2, VM3, and VM4 can all be assigned Managed2.
+----------
+AZURE RBAC & MANAGED IDENTITIES ARCHITECTURE
+
+├── SECURITY PRINCIPALS & REGIONAL SCOPE
+│   ├── Microsoft Entra Service Principals
+│   │   ├── Region-independent (Global scope across Entra ID)
+│   │   └── Direct RBAC Target (Roles attach to Principals, not directly to VM objects)
+│   │
+│   └── Regional Flexibility
+│       ├── User-Assigned Identities (e.g., Managed2 in West US)
+│       └── Cross-Region Attachment (Can be attached to VMs in any Azure region)
+
+├── RG1 ROLE ASSIGNMENT SCOPE: "OWNER" ROLE
+│   ├── Eligible Principals (Can receive Owner role)
+│   │   ├── Managed1 (User-assigned Managed Identity)
+│   │   ├── Managed2 (User-assigned Managed Identity)
+│   │   ├── VM1 System-Assigned Identity
+│   │   └── VM2 System-Assigned Identity
+│   │
+│   └── Ineligible VMs (Cannot receive Owner role directly)
+│       ├── VM3 
+│       │   └── Reason: No System-Assigned ID (Uses Managed1; identity is already covered)
+│       └── VM4 
+│           └── Reason: No identity enabled at all
+
+└── VM ATTACHMENT PERMISSIONS: ATTACHING "MANAGED2"
+    ├── Attachment Capability
+    │   └── Applicable to ALL target virtual machines regardless of location
+    │
+    └── VM Attachment Matrix
+        ├── VM1 ──► Can attach Managed2
+        ├── VM2 ──► Can attach Managed2
+        ├── VM3 ──► Can attach Managed2
+        └── VM4 ──► Can attach Managed2
+Key Takeaways
+Core Principle: Azure RBAC targets Entra ID Service Principals, which are global entities independent of Azure regions.
+
+Role Delegation: Role assignments are bound to the identity (Managed1, Managed2, VM1/VM2 System IDs), not to the physical VM resource itself.
+
+Identity Mobility: User-Assigned Identities (like Managed2) can be associated with resources residing in any region.
+-----------
+q 30
