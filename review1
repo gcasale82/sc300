@@ -156,4 +156,84 @@ Role Delegation: Role assignments are bound to the identity (Managed1, Managed2,
 
 Identity Mobility: User-Assigned Identities (like Managed2) can be associated with resources residing in any region.
 -----------
-q 30
+first step Global Secure Access -> enable global secure access signaling
+
+Microsoft Entra ID sees only the public NAT address of a sign-in, so the trusted named location 10.10.0.0/16 (a private range) never matches
+ User1 has per-user MFA disabled, so there is no prompt
+
+Microsoft Entra seamless SSO uses Kerberos-based integrated Windows authentication. Browsers don't send Kerberos tickets to a cloud endpoint unless its URL is in the browser's intranet zone, so https://autologon.microsoftazuread-sso.com must be added to users' Local intranet zone settings
+
+
+risk policy -> risk value -> action
+confirm user compromised -> user risk high
+Dismiss user risk/Confirm sign-in safe -> dismiss user or sign in risk
+Confirm user compromised sets  user risk to High -  The user-risk policy config : blocks Low and above, and Block access can't be satisfied by MFA
+Dismiss user risk sets User3's risk state to Dismissed, so the user-risk policy no longer applies. The anonymous-IP sign-in is Medium sign-in risk, below the High-only sign-in-risk policy
+
+Log Analytics workspace. -> diagnostic settings
+
+To which groups can you directly assign an Office 365 E5 license -> exclude device only group ; Group-based licensing works with security groups, mail-enabled groups, and Microsoft 365 groups, and it assigns the license to the users in the group
+
+Smart lockout keeps the hashes of the last three bad passwords. A bad password whose hash is already in that list doesn't increment the lockout counter.  A locked-out user who completes SSPR and chooses I forgot my password has the lockout duration reset to 0 seconds
+https://learn.microsoft.com/en-us/entra/identity/authentication/howto-password-smart-lockout
+
+Microsoft Entra ID Protection detects leaked credentials - conditional access condition user risk - action grant - require password change
+
+Global Secure Access client doesn't support multiple concurrent sessions on the same machine. Microsoft Entra registered devices are supported only in preview and only for Private Access traffic not Internet traffic.
+
+Reader permits only control-plane viewing and has no data actions. User Access Administrator on storage1 lets User manage role assignments at that storage account scope.
+
+PIM for Groups can manage cloud security groups and Microsoft 365 groups with assigned membership.
+
+1)Ensure that User1 can use the User Administrator role without approval.
+2)Ensure that User2 can use the User Administrator role after User3 approves User2's role request.
+3)security groups -> Two role-assignable security groups can therefore provide distinct workflows
+
+Applications running on an Azure VM obtain a managed identity access token from the Azure Instance Metadata Service endpoint at http://169.254.169.254/metadata/identity/oauth2/token
+
+The Global Secure Access client for macOS is distributed as GlobalSecureAccessClient.pkg
+android .ipa or .apk, windows .intunewin
+
+Facebook IDP sign-in is available through self-service sign-up user flows (first action to enable)
+
+External collaboration settings : Microsoft Entra external collaboration settings include collaboration restrictions, where an administrator can allow invitations only to specified domains
+
+planned changes for application access to organizational data -> Microsoft Entra ID User consent settings control whether users can grant applications permission to access organizational data
+
+You need to ensure that IT department users can access the Security administrator role only when necessary. -> assignment type eligible
+
+Microsoft Entra Permissions Management -> provides Cloud Infrastructure Entitlement Management (CIEM) to assess privilege assignment risks across Azure, AWS, and GCP from a unified platform, minimizing administrative overhead.
+
+enable Security defaults -> delete CA policy
+
+on-premises account lockout policies apply to Microsoft Entra sign-ins -> passthrough authentication
+
+Permissions Management tab - Identify all the accounts that are assigned the Global Administrator role permanently - Insights
+Permissions Management tab - revire user Permission Creep Index - Analytics
+-
+CA policy assignment user risk or signin-risk level - User1 can sign in from an anonymous IP address? -> Anonymous IP address is a sign-in risk detection and triggers only this assignment ; Users who aren't registered for MFA can't complete the remediation that a risk-based policy requires are blocked and cannot sign-in
+
+location called HighRiskCountries ->  named location CA condition - sign-in frequency -> session control
+
+A system-assigned managed identity -> resource's lifetime
+
+Microsoft Entra sign-in to an Azure Windows VM requires the Virtual Machine User Login or Virtual Machine Administrator Login role ; not work contributor or local user login
+
+on-premises network (Linux) to Global Secure Access network - create remote network
+
+You need to prevent users who access Microsoft SharePoint Online from their user-owned computers from downloading or syncing files. Other users must not be restricted -> CA policy with session control -> A Microsoft Entra Conditional Access policy that targets SharePoint Online and uses the Use app enforced restrictions session control passes device information to SharePoint. SharePoint then gives managed devices full access and gives unmanaged devices browser-only access with no ability to download, print, or sync files.
+
+determine which users access Facebook from their devices and browsers ->Defender portal unsaction facebook ->In Defender for Cloud Apps marking a discovered app as Unsanctioned doesn't block it by itself, but it makes the app's use easier to monitor with the Cloud Discovery filters
+
+After AU1 is changed to Dynamic User, the dynamic membership engine alone controls membership. The usual commands to add or remove members are disabled
+
+Upon completion settings -> action for reviewers or nonresponses to remove access
+
+app  run as a service with no user interaction - Microsoft graph permissions -> application permissions
+
+q66
+
+
+
+
+
