@@ -230,8 +230,162 @@ After AU1 is changed to Dynamic User, the dynamic membership engine alone contro
 Upon completion settings -> action for reviewers or nonresponses to remove access
 
 app  run as a service with no user interaction - Microsoft graph permissions -> application permissions
+---
+The Permissions Management Administrator built-in role can manage all aspects of Microsoft Entra Permissions Management
 
-q66
+prerequisites for app governance -> Microsoft Defender portal 
+
+Premium P2 licenses are counted by the member users who perform review work (assigned reviewers, self-reviewers, group/application owners doing reviews); guest users are covered under the External Identities MAU billing model and do not consume P2 seats.
+
+enable the Private access profile-> Traffic forwarding blade
+
+deploy an app named App1, which will be hosted on multiple virtual machines -> user-assigned + Key Vault
+
+Azure RBAC roles, including Contributor at a resource-group scope, can be assigned to users, security groups, service principals, and managed identities
+
+Microsoft Defender for Cloud Apps.  monitor access by the third-party apps -> OAuth app policy
+
+Ensure that users can sign in to Azure virtual machines by using their Microsoft 365 credentials: -> Azure RBAC
+Delegate the ability to create new virtual machines: -> Azure RBAC
+
+cloud platforms can Permissions Management manage: Aws - GCP
+
+User Administrator : manage license assignments and reset user passwords
+--
+self-service sign-up for App1
+Guest users must be able to sign up by using an email one-time passcode -> identity provider
+User details (name,city,email) -> user flow
+--
+admin consent for delegated Microsoft Graph permissions - users can review and approve the admin consent requests -> Cloud Application Administrator and Application Administrator
+--
+Guest users  access to App1. ensure that guest users who have not accessed App1 in the last 30 days have their access removed -> access review for application access
+--
+installation of the Microsoft Entra private network connector (application proxy) -> Application administrator
+user can register App -> Application developer
+--
+When you try to invite a new guest user from adatum.com to contoso.com, an error message appears.
+You can successfully invite a new guest user from fabrikam.com to contoso.com.
+You need to be able to invite new guest users from adatum.com to contoso.com. -> collaboration restrictions
+--
+etermine which users accepted or declined Terms1(ToU) -> audit logs
+--
+need to implement a sign-in risk-based Conditional Access policy that remediates risk without blocking user access -> MFA
+--
+deploy a third-party SaaS , onboard on  Microsoft Defender for Cloud Apps , ensure session control policies -> SSO for app
+--
+Users report that they cannot sign in to the virtual machines with their Microsoft Entra credentials. -> ensure VM access https://enterpriseregistration.windows.net
+--
+use the Azure portal to create a custom Azure subscription role named Role3. Role3 will use the baseline permissions from an existing role-> builtin Azure subscription roles and Role2 only
+--
+Create a user risk-based Conditional Access policy -> conditional access administrator and Security administrator
+view Risky user report -> Security administrator and Security operator
+--
+see a Spanish sign-in form -> Company branding settings
+--
+administrative-unit-scoped User Administrator can manage only direct members of that administrative unit users and groups but not users not in AU but in groups
+--
+on premise exchange , need to obtain Global administrator privileges that contains the self-service sign-up users -> create self-service signup user account in the tenant , signin 365 admin center, respond to become admin message , create DNS TXT
+--
+Risk detections report contains filterable data for up to the past 90 days
+--
+Microsoft SharePoint Online , stop users from printing the files directly from Site1 -> session policy
+--
+Key Vault Secrets Officer	Perform any action on the secrets of a key vault, except manage permissions.
+Key Vault Crypto Officer	Perform any action on the keys of a key vault, except manage permissions
+Key Vault Certificates Officer	Perform any action on the certificates of a key vault, except managing permissions
+Key Vault Reader	Read metadata of key vaults and its certificates, keys, and secrets
+Key Vault Secrets/Crypto/Certificate User -> read the contents
+--
+case study -> on-premises network of Contoso contains an Active Directory domain named contoso.com , 
+Contoso plans to acquire a company named ADatum Corporation. One hundred new ADatum users will be created in an Active Directory OU named Adatum
+All users must be synced from AD DS to the contoso.com Azure AD tenant
+need to synchronize the ADatum users
+-> from entra connect wizard , customize synchronzation options
+explanation : users created in the new Adatum OU are not synced until that OU is added to the filter. Rerunning the wizard and choosing Customize synchronization options lets you change domain and OU filtering and select the Adatum OU
+--
+Microsoft Entra role can be assigned only to a group created as role-assignable (isAssignableToRole = true)
+Privileged Authentication Administrator or a Global Administrator can change the credentials of, or reset the password for, members and owners of a role-assignable group
+Administrator assignment is Eligible. Signing in doesn't activate it: Admin must activate the role in PIM
+--
+Phishing-resistant authentication methods
+Windows Hello for Business
+Platform Credential for macOS
+Synced passkeys (FIDO2)
+FIDO2 security keys
+Passkeys in Microsoft Authenticator
+Certificate-based authentication (CBA)
+https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication
+---
+organize related apps into categories in the My Apps portal. -> collections
+-
+Microsoft Entra Terms of Use policies are applied and enforced through Conditional Access policy
+-
+case study : Configure the User administrator role to require justification and approval to activate, 
+implement the planned changes to the User administrator role -> modify role settings
+explanation: PIM role settings are configured per role
+-
+create a catalog  that includes a custom extension:
+first create -> logic app
+distribute catalog -> access package
+---
+case study
+Collaborate with the users at Fabrikam on a joint marketing campaign
+Fabrikam users must have access to the marketing department’s SharePoint site for a maximum of 90 days
+implement the planned changes and technical requirements for the marketing department
+configure user access -> access package
+enable collaboration with fabricam.com -> connected organization
+explanation:
+An access package in Microsoft Entra entitlement management defines the resources, roles, and request/assignment policies used to provide user access. A connected organization represents an external organization whose users can collaborate through entitlement management.
+---
+AD DS) domain synchronized with a Microsoft Entra tenant - user authentication always validates passwords against the AD DS
+pass through authentication
+use -> entra connect
+---
+A self-review assigns each user the review of that user’s own access (only the user)
+---
+compare each user's role permissions -> 365 admin center (compare roles feature)
+---
+The contractor must be able to authenticate as user@outlook.com -> New-MgInvitation ; inviting as guest
+--
+You need to implement access packages for Site1 and Team1. The solution must meet these requirements:
+
+Members of Group3 must be able to request access to Site1 only.
+Members of Group1 must be able to request access to Site1 and Team1.
+Members of Group4 must be able to request access to Site1 and Team1.
+Only Group2 members must be able to approve access package requests from Group1 members.
+Only Group5 members must be able to approve access package requests from Group3 and Group4 members.
+What is the minimum number of access packages that you should create?
+
+Solution 2 : 
+access package -> multiple resources , multiple assignment policies each with different requestor groups and approval settings
+package1 Site1
+package2 Site1 and Team1 
+
+---
+Microsoft Entra Permissions Management to automatically monitor permissions and create and implement right-sized roles -> User Access Administrator
+---
+With user consent disabled, app consent must be granted by The Application Administrator
+---
+role activation -> check require approval -> user cannot approve his own activation
+A delegated approver enters business justification when approving a pending Microsoft Entra PIM role-activation request; required justification on activation is for requester, approver has ever one optional.
+---
+need to block access to cloud apps when a user is assessed as high risk with Microsoft Defender -> access policy
+---
+cross tenant access
+default settings
+B2B Collaboration Inbound: All allowed
+B2B Collaboration Outbound: All allowed
+B2B Direct Connect (Inbound/Outbound): All blocked
+
+B2B collaboration is the classic guest model (invitation - redeem)
+B2B direct connect  (teams,shared channels)
+
+Inbound access: Controls what external users from another tenant can do in yours:
+Outbound access: The mirror image: whether your users can collaborate in an external tenant
+Trust settings: Whether you accept MFA, compliant-device, and hybrid-Azure-AD-joined-device claims that an external tenant has already verified, so your policies don't force external users to redo work their home tenant already did
+
+---
+q121
 
 
 
