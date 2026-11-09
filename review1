@@ -9,8 +9,6 @@ Cloud App Security, now Microsoft Defender for Cloud Apps, provides access and s
 
 ensure that users can connect to Exchange Online only through email clients that use Modern authentication protocols -> Microsoft Entra Conditional Access policy
 
-PRO Enterprise License - 10 services - 1490 euro per year - Access to technical support via tickets within 3 business days SLA (Monday – Friday, 9am to 6pm)
-PRO Tailored support - 4490 euro per -year - support via ticket/email/phone/videocall - SLA 1 business day - Mon-Fri 9-18
 
 Enable app governance in the Microsoft Defender portal under Settings > Cloud apps > App governance > Service status. Microsoft 365 Defender is the former name associated with the unified Defender XDR experience. App governance is now included with Defender for Cloud Apps and no longer requires a separate add-on license
 
