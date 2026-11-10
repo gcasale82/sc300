@@ -383,7 +383,117 @@ Outbound access: The mirror image: whether your users can collaborate in an exte
 Trust settings: Whether you accept MFA, compliant-device, and hybrid-Azure-AD-joined-device claims that an external tenant has already verified, so your policies don't force external users to redo work their home tenant already did
 
 ---
-q121
+must ensure that users can request access to SharePoint Online site -> create access package
+
+--
+User1 can onboard Sub1 to Permissions Management
+Sub1 : User access administrator
+Tenant: Permissions management administrator
+--
+Microsoft Entra Password Protection normalizes common character substitutions and fuzzy-matches -> most long C0ntoso,Pr0jectlitw@re, T@ilw1nd
+--
+Security Administrator - ensure that User1 is able to create Microsoft Defender for Cloud Apps session policies -> create conditional access policy and select use conditional access app control
+--
+configure an alert that triggers when an app requires high permissions and has been authorized by more than 20 users -> OAuth app policy
+---
+cross-tenant synchronization , usi attribute mappings and not group sync -> only User1 (it will sync groups only when group synchronization is enabled)
+---
+case study
+User3 = User administrator
+requirements
+Configure self-service password reset (SSPR).
+Configure multi-factor authentication (MFA) for all users.
+Users must provide one authentication method to reset their password by using SSPR. Available methods must include:
+Email
+Phone
+Security questions
+The Microsoft Authenticator app
+
+resp: User3 SSPR require -> 2 methods
+auth method can be used -> Email,phone, Microsoft Authenticator app
+explanation : separate administrator SSPR policy to User administrator accounts, strong two-gate policy requires two authentication methods and prohibits security questions
+---
+Microsoft Entra Permissions Management - identify managed identities that have assigned permissions and remove any permissions unused for 90 days minimize administrative effort -> autopilot rule
+--
+users report that they received an MFA prompt on their Microsoft Authenticator app without having initiated a sign-in request. -> enable Report suspicious activity , high user risk , CA policy -> you set Report suspicious activity to Enabled in the Authentication methods settings, and you create a Conditional Access policy that blocks access for users whose user risk is High
+--
+Global Administrator is a highly privileged Microsoft Entra role, so the group assigned that role is included in the highly privileged accounts insight. Security Operator is a privileged role assignment on the listed service principal, so SPrincipal1 is included in the privileged service-principals insight.
+---
+prevent users from signing in to Viva Engage from high-risk locations -> access policy
+---
+Create a Conditional Access App Control custom policy named Custom1, Configure Policy1 to use Custom1. -> defender,session
+--
+case study
+requirements
+Configure the User administrator role to require justification and approval to activate.
+You need to change the settings of the User administrator role to meet the technical requirements.
+-> require justification on activation , set all assignment to eligible
+--
+A Conditional Access persistent browser session control suppresses the “Stay signed in?” prompt, Conditional Access exclusions override inclusions.
+--
+“All internet resources with Global Secure Access” Conditional Access target authorizes -> the Microsoft traffic and Internet access tunnels
+Security profiles selected (profile1)-> Internet access profile 
+--
+Microsoft Entra Permissions Management
+Identify unused permissions assigned to applications and managed identities.
+Give users recommendations about permissions to remove.
+Remove unused permissions.
+role,use -> user access administrator , autopilot rule
+--
+exempt users from Boston office for MFA settings using CA -> named location with public IP address range
+--
+powershell command so Permission Management can onboard Sub1 -> New-AzRoleAssignment -ApplicationId b46c3ac5-9da6-418f-a849-0a07a10b3c6c -RoleDefinitionName ->Reader -Scope "/subscriptions/<subscriptionID>"
+--
+sequence to prevent users from accessing url from 500 window devices -> web content filtering policy , security profle , conditional access policy
+--
+A web application registration must include a redirect URI
+--
+case study
+Configure multi-factor authentication (MFA) for all users.
+Users must be prompted to register for MFA and given an option to skip registration for a grace period.
+-> MFA registration policy , 14 days
+The Microsoft Entra ID Protection MFA registration policy prompts users to register during interactive sign-in. Users can bypass registration for 14 days when MFA is not otherwise required, after which registration is required to complete sign-in.
+--
+case study
+issue : Anyone in the organization can invite guest users, including other guests and non-administrators
+You need to address the guest-user invitation issue.
+modify external collaboration settings
+---
+For an access package, Microsoft Entra permits Global Administrators, Identity Governance Administrators, the relevant catalog owner, and the relevant access package manager to create and manage access reviews
+---
+case study 
+When you try to assign the Device Administrators role to IT_Group1, the group does not appear in the selection list.
+resolve  IT_Group1 issue
+
+-> recreate the group
+A group must be created as a role-assignable group before it can receive a Microsoft Entra role such as Microsoft Entra Joined Device Local Administrator (the Device Administrators role in the scenario). The isAssignableToRole setting is available only when creating a new group and cannot be applied to an existing group
+---
+case study: 
+Litware has an AD DS forest named litware.com.
+requirement: Trust relationships must not be established between the adatum.com and litware.com AD DS domains
+planned change : Synchronize the AD DS users and groups of litware.com with the Azure AD tenant
+-> microsoft entra cloud sync
+explanation: Microsoft Entra Cloud Sync is designed to synchronize a new, disconnected AD DS forest to the same Microsoft Entra tenant when an existing forest is already synchronized by Microsoft Entra Connect Sync. This supports the requirement to avoid establishing a trust between adatum.com and litware.com
+---
+case study
+solve : Multiple users in the sales department have up to five devices. The sales department users report that they sometimes must contact the support department to join their devices to the Azure AD tenant because they have reached their device limit.
+-> device settings
+---
+case study
+Users assigned the User administrator role must be able to request permission to use the role when needed for up to one year
+-> set all assignments to Eligible, modify expire eligible assignment after setting
+---
+Leaked credentials -> user risk CA
+sign-in from a suspicious browser: -> sign-in risk CA
+Resources accessed from an anonymous IP address: -> sign-in risk CA
+---
+Because On activation, require Azure MFA (now named On activation, require multifactor authentication) is set to Yes, an eligible user must complete Microsoft Entra multifactor authentication to activate the role, and the activation’s maximum duration is eight hours. Users who already completed MFA earlier in the session might not be prompted again; use an authentication context with sign-in frequency Every time to force it. The role also requires approval. With no designated approvers, Microsoft Entra PIM uses Privileged Role Administrators and Global Administrators as default approvers.
+---
+Catalog creators are assigned in ID Governance > Entitlement management > Settings.
+---
+users connecting to the Microsoft 365 portal from an anonymous IP address are prompted to use multifactor authentication (MFA) -> CA sign-in risk condition
+---
+q161
 
 
 
