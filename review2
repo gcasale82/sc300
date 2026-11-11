@@ -1,0 +1,103 @@
+--
+case study
+User administrators currently use the Microsoft 365 admin center to manually assign licenses. All users have all licenses assigned except for the following exceptions:
+The users in the London office have the Microsoft 365 Phone System license unassigned.
+The users in the Seattle office have the Yammer Enterprise license unassigned.
+The user administrators report that it is tedious to manually configure the different license requirements for each Contoso office.
+Simplify license allocation for new users added to the tenant.
+License allocation for new users must be assigned automatically based on the location of the user.
+The helpdesk administrators must be able to manage licenses for only the users in their respective office.
+
+satisfy the technical requirements for license management by the helpdesk administrators
+branch office-> administrative unit
+tool -> entra admin center
+---
+case study 
+Implement a custom line-of-business Azure web app named App1. App1 will be accessible from the internet and authenticated by using Azure AD accounts.
+App1 must have a redirect URI pointed to app uri
+planned changes and technical requirements for App1
+-> app registration in entra id
+expl: Redirect URIs for web applications are configured in the app registration’s platform settings
+--
+When a group is assigned to a cross-tenant synchronization configuration, only direct members of that group are in scope; the assignment doesn't cascade to nested groups.
+cross-tenant synchronization syncs only internal members and can't sync internal guests from the source tenant
+---
+Amazon Web Services (AWS) account, a Google Workspace subscription, and a GitHub account - Microsoft 365 Defender - monitor OAuth authentication requests
+Microsoft Azure app connector -> no
+Amazon Web Services app connector -> no
+ GitHub app connector -> no
+Google Workspace app connector -> yes
+
+
+The Microsoft Azure connector monitors Azure Resource Manager activities only. OAuth app-permission monitoring in Microsoft Defender for Cloud Apps applies to supported platforms such as Microsoft 365, Google Workspace, and Salesforce; adding the Azure connector does not provide that OAuth visibility.
+---
+Eligible Microsoft Entra administrative roles are activated through Privileged Identity Management (PIM) in the Microsoft Entra admin center
+---
+make sure that User1 receives a notification every three months to validate Group1's guest membership -> access review
+--
+need to use Microsoft Entra workbooks to monitor identity activity - diagnostic settings destination -> Log analytic workspace
+---
+on-premises Windows Server and a Microsoft Entra tenant containing an app registration named App1
+App1 can request tokens only from the corporate network.
+App1 credentials must not be stored in plain text. (certificate)
+Non-interactive scheduled tasks on Server1 must be able to authenticate as App1 by using App1's credentials
+
+-> conditional access policy
+scheduled tasks -> certificate
+expl: A location-based Conditional Access policy targeting App1’s service principal can block App1’s token requests from outside the corporate public IP ranges ; 
+---
+You need to ensure that App1 can use Microsoft Graph to read directory data in tenant -> sequence -> app registration, add app permissions , grant admin consent
+--
+mail-enabled security group -> user with mailbox (365 enterprise E5 license)
+--
+An administrative unit-scoped User Administrator can reset passwords for non-administrators and for limited admins, such as Groups Administrator, in that unit; it can't reset the password of a user who holds a role with organization-wide scope.
+A Groups Administrator scoped to AU1 can manage only groups in AU1
+Authentication Administrator can view, set, and reset authentication methods for non-administrator users in its assigned administrative unit, but managing the Authentication methods policy—including targeting a group for passwordless sign-in—requires Authentication Policy Administrator or higher.
+--
+configure protected actions so that privileged users must use phishing resistant MFA -> first -> add authentication context
+--
+requires users to request access before they are able to access corporate applications ->app registration -> configure SSO  ->self-service
+--
+on-premises Active Directory Domain Services (AD DS) domain containing 500 Windows devices.Microsoft 365 subscription syncs with the AD domain.
+Conditional Access policy named Policy1
+Apply Policy1 to all the Windows devices: -> hybrid join the device to the subscription
+Assess the compliance of the Windows devices with Policy1: -> enroll devices in M Intune
+---
+need to set up continuous access evaluation for application sign-ins and assign that configuration to users who hold the Application Administrator role -> conditional access policy
+---
+User-assigned managed identities are created as regional resources, but the service principal behind them in Microsoft Entra ID is available globally, so Managed1 can be assigned to supported resources in any region (Vm,storage account, App)
+---
+Emergency account - Microsoft recommends a permanently active (not eligible) Global Administrator assignment and excluding these accounts from Conditional Access policies that block or restrict sign-in; the account itself is protected with a phishing-resistant method such as a passkey (FIDO2) or certificate-based authentication. Monitoring and alerting on modifications or sign-ins preserves access while detecting any use or unauthorized change
+---
+retains a deleted user in a suspended, restorable state for 30 days. Restoring a deleted user requires at least the User Administrator role
+---
+A deleted Key Vault object remains recoverable during its configured retention period. Admin1 has the Key Vault Administrator role, which allows all data-plane operations, so Admin1 can recover Secret1. KeyVault1 has purge protection enabled, which prevents permanent deletion of Certificate1 until its 15-day retention period expires, regardless of role;
+To permanently delete or purge a soft-deleted Azure Key Vault or vault object, you need the Key Vault Purge Operator role or an Azure Subscription Owner
+Neither standard Key Vault Contributor nor Key Vault Administrator roles can directly purge a soft-deleted vault or object unless they also hold the Purge Operator privilege or Subscription Owner rights
+Purge Protection: If purge protection is enabled on the Key Vault, no administrator role, subscription owner, or even Microsoft can purge or override the soft-delete retention period until it naturally elapses
+---
+prevent users from using legacy authentication -> Client apps condition
+---
+Microsoft Defender portal (security.microsoft.com > Cloud apps > App governance
+Security Reader role for view the App governance dashboard
+--
+users will receive a passcode by emal -> guest user never accessed resources / has never redeemed an invitation
+--
+PIM cannot manage the classic subscription administrator roles Account Administrator or Service Administrator; 
+PIM -> SharePoint Administrator
+--
+Microsoft Entra External ID pricing is calculated based on monthly active users (MAU) -> linked subscription
+--
+Delegated permissions let an application call Microsoft Graph on behalf of the signed-in user and restrict access to resources that user can access. Accessing the signed-in user's Outlook calendar therefore requires a delegated Microsoft Graph permission, such as the appropriate Calendars delegated scope.
+--
+Ensure that User1 can manage the Application Proxy settings --> application administrator
+--
+User1 can create access reviews for Microsoft Entra roles -> Privileged Role Administrator
+--
+ SecAdmin1 can reset passwords and invalidate refresh tokens (sessions) for non-administrative users from Microsoft Entra ID Protection -> Helpdesk administrator
+--
+mplement smart lockout with a lockout threshold of 10 unsuccessful sign-ins -> password protection
+--
+expiration policy applies to Microsoft 365 groups only - A custom group lifetime must be at least 30 days
+
+q201
