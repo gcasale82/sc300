@@ -99,5 +99,41 @@ User1 can create access reviews for Microsoft Entra roles -> Privileged Role Adm
 mplement smart lockout with a lockout threshold of 10 unsuccessful sign-ins -> password protection
 --
 expiration policy applies to Microsoft 365 groups only - A custom group lifetime must be at least 30 days
-
-q201
+--
+new domain sequence : add domain contoso.com, create TXT, verify domain , set domain to primary
+-
+A group added to an administrative unit is itself in management scope, but its members are not
+-
+entitlement management to provide users at Fabrikam, Inc. with access to resources
+Fabrikam users must be automatically removed from the tenant when their access is no longer needed
+-> entitlement management control configuration
+exp: The Lifecycle of external users settings, under ID Governance > Entitlement management > Control configurations
+--
+The maximum-device setting counts both Microsoft Entra joined and Microsoft Entra registered devices;
+Cloud Device Administrators can modify Device settings, including the MFA requirement.
+Microsoft Entra Joined Device Local Administrators receive local administrator rights only on Microsoft Entra joined Windows devices, not on Microsoft Entra registered devices
+--
+from remote locations without Wi-Fi access or mobile-phone connectivity-> verification code from microsoft authenticator app
+--
+system-assigned managed identity for Automation1.
+Automation1 can read the contents of Secret1, Prevent Automation1 from accessing other secrets stored in Vault1 -> from secret1 configure IAM
+--
+need to remove the Office 365 Enterprise E3 licenses from the users with the least administrative effort-> license page microsoft 365 admin center
+--
+on-premises network includes a VPN server that authenticates against the on-premises Active Directory domain. The VPN server does not support Azure MFA , alternative -> Network policy server
+--
+bulk create user required fields -> displayname, userprincipalname,passwordprofile
+--
+VM1 and VM2 can retrieve data from SQL1 - minimal effort -> managed identity
+--
+security default-> MFA -> microsoft authenticator
+--
+The following authentication methods are available for SSPR:
+Microsoft Authenticator push notifications
+Hardware OATH tokens (preview)
+Software OATH tokens - mobile app code
+Short Message Service (SMS) sign-in
+Voice call
+Email OTP
+--
+q221
