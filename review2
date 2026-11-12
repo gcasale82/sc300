@@ -136,4 +136,139 @@ Short Message Service (SMS) sign-in
 Voice call
 Email OTP
 --
-q221
+The Conditional Access What If tool simulates a sign-in for a specific user using defined sign-in conditions,
+-
+access review named Access1
+Select what to review: Teams + Groups
+Review scope: All Microsoft 365 groups with guest users
+Scope: Guest users only
+Select reviewers: Users review their own access
+
+All Microsoft 365 groups with guest users" review scope, which automatically excludes dynamic groups and role-assignable groups and only generates review instances for groups that actually contain guest users
+--
+User1 gets an error message when trying to access Microsoft Defender for Cloud Apps - determine the cause of the error minimizing administrative effort -> sign-in logs
+--
+before apply CA policy -> disable security default
+--
+ensure that AKS1 (aks cluster) can access DB1 (Cosmos db)- AKS1 uses the managed identity to access DB1. -> for DB1 assign Cosmos DB accout reader role
+--
+Deleted application registrations remain recoverable for 30 days. Restoration within that period restores the registration and its preserved configuration, including tenant-specific user and group assignments in the home tenant
+--
+scenario: on premise AD domain, Server1 with shared folder Share1 ; 500 Windows11 devices should connect remotely to Share1
+pre-requisite : In Global Secure Access, you enable the Private access profile and deploy the Global Secure Access client to every device.
+sequence: -> install connector on Server1, Create enterprise app, create app segment
+---
+Windows Hello for Business combines a device-bound credential with a PIN or biometric gesture, providing the required multiple factors and satisfying Microsoft Entra MFA requirements.
+-
+Microsoft Entra Connect Sync OU Filtering:
+2 filters : OU + filter user and devices
+
+->AND logic for both filters; Microsoft Entra Connect Sync group-based filtering synchronizes direct members of the selected group, Nested membership is not resolved: adding a group as a direct member synchronizes that group, but not its members through the nesting.
+--
+Pass-through authentication validates Microsoft Entra sign-in passwords directly against on-premises Active Directory. Password writeback sends SSPR password changes from Microsoft Entra back to on-premises Active Directory
+--
+Set Users can register applications (Entra ID > Users > User settings) to No so that nonprivileged users can no longer create app registrations ; Application developer can create app
+--
+Microsoft Entra sign-in to an Azure VM requires the Virtual Machine User Login or Virtual Machine Administrator Login role
+Virtual Machine Local User Login -> No
+--
+Managed identities are service principals. Security groups can contain service principals, whereas Microsoft 365 groups can contain only users. Dynamic membership is calculated by rules, and groups synchronized from on-premises AD can be managed only on-premises. A Microsoft Entra cloud user can therefore be manually added to the assigned cloud Microsoft 365 groups and the assigned cloud security group only.
+---
+PIM - Cloud Application Administrator role - which blade -> Microsoft Entra roles
+--
+large number of new applications have been added to the tenant - need to implement an approval workflow for new enterprise applicationsneed to implement an approval workflow for new enterprise applications
+-> Microsoft Entra Admin consent settings 
+---
+You enable self-service password reset (SSPR)- security questions - Which users required for SSPR -> User , Security Reader; Microsoft Entra applies a separate, mandatory two-gate SSPR policy to User Administrator and Password Administrator accounts; that policy prohibits security questions.
+--
+ the risk detections report - detection categorized as a user risk -> threat intelligence
+--
+User1 can purchase a Microsoft Entra Permissions Management license for Sub1 -> Billing Administrator
+--
+Bulk B2B invitation CSV files require the invitee’s email address and a redirection URL
+--
+review App1 sign-in activity - minimize effort - usage and insights
+--
+Azure Rbac role1: manage security groups , role2 manage Azure Firewall -> both Microsoft.Network
+--
+external contractor - review access to the Exchange admin center at the end of every month and block sign-ins when necessary -> group based access review target guest users
+--
+scenario: Entra Connect , Pass Hash sync enabled , Pass-through enabled - connectivity on-premise lost -> can authenticate only No synced users and guest;
+Pass-through Authentication validates credentials against on-premises Active Directory through authentication agents, so a synchronized user cannot be authenticated when the on-premises environment has lost Internet connectivity to Microsoft Entra ID. Although password hash synchronization is enabled, failover from pass-through authentication to password hash synchronization isn't automatic
+--
+scenario: Microsoft Entra Connect, Domain/OU Filtering, flagged OU1,Users; pass-through authentication enabled , hash-sync disabled,enable pasword writeback ; (SSPR) is enabled for all users
+users of OU1 -> can use SSPR, will be authenticated by AD on premise
+users not synchronized (excluded - OU2) cannot be assigned SharePoint Online membership
+--
+ToU,CA -> Grant ; expl: A Microsoft Entra Terms of Use policy is enforced through a Conditional Access Grant control
+--
+scenario: App1 - users added to Group1 , approver for app access User1 , user assignment requirement=y ; visible too users=No; group1 contains: user1,user4,group3
+The members of Group3 can access App1 without first being approved by User1->no
+After you configure self-service for App1, the owner of Group1 is User1 -> yes
+App1 appears in the Microsoft 365 app launcher of User4 -> no
+Group-based assignment to an enterprise application doesn't cascade to nested groups, user assignment is required, nested users must request access and be approved by User1
+selected approver becomes the owner of the group that approved users are added to
+isible to users is set to No, so no user sees App1 in My Apps or the Microsoft 365 app launcher
+--
+Scenario: Governance > Entitlement management > Control Configurations
+block external users signin:Y, remove external users=Y, N days=30 ;
+When an external user invited by entitlement management loses their last access-package assignment, entitlement management blocks the user from signing in and removes the account after the configured delay. a separate role assignment does not count as an access-package assignment. Guest3 was invited and given group membership outside Package1, so the package-expiration lifecycle does not remove that account
+--
+Entra id connect hash sync + password writeback - federation
+on tenant you can: add user to group ; Disabling User2 in Microsoft Entra ID does not disable the on-premises AD DS account, so the still-enabled domain account can sign in to Server1
+Federation through AD FS performs user authentication on-premises; because User3’s on-premises AD DS account remains disabled, User3 cannot sign in to Microsoft 365 if enabled on tenant.
+---
+need to assess and remediate risks related to highly privileged accounts. The solution must minimize administrative effort -> PIM
+--
+Microsoft Entra group-based licensing does not support nested groups. A license assigned to Group1 applies only to its immediate user members
+--
+dynamic user group rule no department defined : user.departement -eq null
+--
+use Azure Monitor to analyze EntraID activity logs ; receive 100 mail alers for failed user signin , need to change destination mail receiver to security administrator
+modify diagnistic settings -> No
+From Microsoft Entra ID, you create an assignment for the Insights Administrator role -> No
+You create a data collection rule from Azure Monitor -> No
+right : Azure Monitor action groups define alert notification recipients
+--
+users are able to manage Microsoft Entra Internet Access -> Global Administrators, Global Secure Access Administrator
+--
+Privileged Role Administrator can manage Microsoft Entra role assignments, supporting delegated directory-role administration. User Access Administrator can manage Azure RBAC role assignments for Azure resources
+--
+make App1 available to Microsoft Entra users
+on premise configuration:
+Server4: application proxy (private network connector)
+Firewall: allow outboud HTTPS connections from server4 to Microsoft Entra ID
+--
+default App registrations settings
+Application Administrator and Cloud Application Administrator are both supported roles for assigning users and groups to an enterprise application
+every member users can register applications
+--
+Storage Blob Data Reader grants User2 read access to File1 because it is blob data in the container. Reader alone grants User1 no storage data access. Storage Contributor allows User3 to obtain the storage account keys, and an account key authorizes access to data in both Blob Storage and Azure Files; therefore User3 can read File1 and File2
+--
+Microsoft Entra access reviews support group membership and enterprise application access. Privileged Identity Management also supports access reviews for Azure resource roles and Microsoft Entra directory roles. Consequently, the assigned-membership group, enterprise application, subscription-level Contributor role, and Microsoft Entra role can all be reviewed.
+---
+users can grant enterprise applications access to their profile. The solution must ensure users can consent only to the User.Read and profile delegated permissions -> permission classification
+--
+Microsoft Entra audit logs record changes to Conditional Access policies; supported format csv and json
+--
+scenario:
+You have a Microsoft Entra tenant that contains a group named Group1 and two users named User1 and User2. User1 belongs to Group1.
+You register an enterprise application named App1. Group1 is assigned to App1, and App1 requires user assignment.
+You enable self-service application access for App1 with these settings:
+Allow users to request access to this application: Yes
+To which group should assigned users be added: Group1
+Require approval before granting access to this application: Yes
+Who is allowed to approve access to this application: User2
+->Members of the group assigned to an enterprise application already have the application's access, so User1, an existing Group1 member, does not need to submit a self-service request. Requiring approval means every self-service request, including one from User2, stays pending until an approver acts, so Group1 membership is never granted automatically at the moment of the request. Business approvers for self-service application access act from their My Apps portal (myapps.microsoft.com), which is a separate experience from the Microsoft Entra admin center, so User2 approves or denies App1 requests there rather than in the admin center.
+--
+multiple Azure App Service apps that will require access to the storage accounts
+-> user-assigned managed identity
+-> RBAC 
+---
+
+Email one-time passcode is used as a fallback for B2B guests who cannot be authenticated by Microsoft Entra ID, a Microsoft account, or a configured federated identity provider
+Guest receives the passcode, which expires after 30 minutes
+--
+to access Identity Secure Score, you must be assigned one of the following roles in Azure Active Directory: Global administrator; Security administrator; Exchange administrator; SharePoint administrator.
+--
+q288
