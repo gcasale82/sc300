@@ -1,0 +1,118 @@
+emergency access accounts should be cloud-only rather than synchronized from on-premises AD DS, so they remain usable during an on-premises identity or synchronization outage. A Global Administrator emergency account can restore administrative access to the tenant.
+--
+Storage Blob Data Reader can read blob content
+Condition2 targets only the blobs/write action: a read doesn't match that ActionMatches, so !(ActionMatches) is true and the condition allows the read. User2's Storage Blob Data Owner assignment on storage1 therefore lets User2 read blob1 in storage1 (Yes)
+--
+only user as owner of App
+--
+need to identify discovered apps used in your organization that do not require user authentication (Defender portal) => create a discovery app query
+--
+Ensure that User1 can create access reviews for groups -> User Administrator
+User2 can generate and review an access review history report that includes every completed access review. -> Security reader
+--
+Conditional Access Grant controls include Require multifactor authentication. Session controls include Sign-in frequency, which determines how long a user remains signed in before being prompted to authenticate again
+--
+The Global Secure Access client for Windows requires a 64-bit version of Windows 10 (LTSC 2021 or newer) or Windows 11. 
+On Microsoft Entra registered Windows devices, only Private Access traffic is supported
+Global Secure Access client acquire Microsoft Entra Internet Access traffic -> only joined Windows
+--
+remove the Microsoft 365 E3 licenses from the users while using the least administrative effort -> Set-MgUserLicense
+--
+create a Microsoft Defender for Cloud Apps access policy for App1 -> conditional access policy o use conditional access app control
+--
+Security Administrator is not among the roles that Microsoft Entra ID supports assigning with administrative unit scope ; most used User/Helpdesk/authentication/groups/license administrator (helpdesk and lifecycle)
+--
+ cross-tenant synchronization -  Clauses within a scoping filter use AND logic, while multiple scoping filters use OR logic
+--
+application collection named HR Apps,Applications: App1, App2, App3 ; Users and groups: HRUsers
+Enabled for users to sign in: Yes ,User assignment required: Yes ,Visible to users: Yes
+ensure that users can also see App3
+-> add HRUsers
+A My Apps collection displays only applications that users are already assigned to. When user assignment is required, HRUsers must be assigned directly to App3 through its Users and groups settings. Assigning the group to the collection alone does not grant access to the application
+--
+Enable a system-assigned managed identity for VM1.
+Add the system-assigned managed identity of VM1 to Group1.
+$vm = 
+-> Get-AzVM
+ -ResourceGroupName myResourceGroup -Name vm1
+Update-AzVM -ResourceGroupName myResourceGroup -VM $vm -IdentityType SystemAssigned
+$displayname = 
+-> Get-AzADServicePrincipal
+ -displayname "vm1"
+$group = Get-AzADGroup -searchstring "group1"
+New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $displayname.Id
+--
+job information is managed in the on-premises Active Directory source, on tenant only for not synced users or guest. 
+Usage location is a Microsoft Entra ID attribute and can be changed sync users + guest (all users)
+--
+Global Secure Access client to compatible devices - use Private Access -> widows registered + hybrid joined+ joined, android registered
+--
+You create an Azure Sentinel instance and configure the Azure Active Directory connector.
+You need to ensure that Azure Sentinel can generate incidents from risk alerts raised by Azure AD Identity Protection.
+-> add Sentinel data connector
+--
+The Helpdesk Administrator built-in role includes permissions to create and manage Microsoft 365 service requests, read and configure Service Health in the Microsoft 365 admin center, and create and manage Azure support tickets
+--
+Users assigned Role1 can create or delete Azure Container Apps instances -> role -> Microsof.App
+Users assigned Role2 can enforce adaptive network hardening rules -> Microsoft.Security
+--
+remove the Office 365 Enterprise E3 licenses -> Set-MgUserLicense
+
+---
+synchronizes with Microsoft Entra ID by using Microsoft Entra Connect
+new proxyAddress unique -> successfully synced (User1 + admin@contoso.com)
+existing user -> proxyaddress already belogs to user -> AttributeValueMustBeUnique
+new user -> proxyaddress already belogs to user -> InvalidSoftMatch
+---
+Scenario: EntraID <-> on premise AD sync ; user from Internet auth firewall with AD credentials ;  plan manage access to external applications by using Microsoft Entra ID
+use the firewall logs to create a list of unmanaged external applications and the users who access them
+-> Cloud Discovery in Microsoft Defender for Cloud Apps
+---
+PIM can manage just-in-time assignments for all Microsoft Entra roles, such as Global Administrator and Security Administrator, and for all Azure roles, both built-in and custom, such as Microsoft Sentinel Contributor. PIM can't manage the classic subscription administrator roles: Account Administrator, Service Administrator and Co-Administrator.
+---
+ensure that Microsoft Entra Password Protection continues to function if one server fails -> Microsoft Entra Password Protection proxy service
+Microsoft Entra Password Protection uses proxy servers to obtain policy data from the cloud for on-premises domain controllers. Microsoft recommends at least two Password Protection proxy servers per forest for redundancy
+---
+Active Directory forest connected using Microsoft Entra Connect Sync - need to prevent synchronization of users whose extensionAttribute set to NoSync -> inbound synchronization rule for the Active Directory Domain Services connector
+--
+Global Secure Access client to the devices by using Intune - private access to App1 -> deploy private network connector
+--
+Identify the locations and IP addresses used by Microsoft Entra users to sign in -> sign-in logs
+Identify changes to Microsoft Entra users or sp : audit logs
+Review the Microsoft Entra ID security settings/recommendations -> Identity sec score
+--
+protected actions sequence : create authentication context, create CA policy, add protected action 
+--
+Cross-tenant synchronization, group1+Scoping filter: Department EQUALS Marketing; lowercase excluded
+--
+CA user-risk = high action : reset password ; users have MFA configured and registered ; user1 has risk = medium; need to force User1 password reset -> confirm User1 as compromised.
+--
+PIM access review - make sure that users who do not respond to review requests are automatically removed from the roles, while minimizing administrative effort -> Reviewers: Members (self) , If reviewers don't respond: Remove access
+--
+need to remove the Office 365 Enterprise E3 licenses from the users with the least administrative effort -> license page 365 admin center
+--
+User1 can change the review frequency for Package1 -> Identity governance administrator
+--
+Entra Permissions Management- need to replace every permission granted to User1 with read-only permissions -> permission subtab/quick action
+--
+enterprise application  Self-service settings: group1 ,require approval=Y, approver=user2
+user1 in group1; user2,user3 no group.
+Which users can request access to App1? -> user2 and user3 
+expl: userof group1 already approved
+--
+All users use Windows 10 computers joined Entra id ; third-party cloud service, Service1 supports oauth
+Ensure that the users can connect to Service1 without being prompted for authentication: -> enterprise application
+Ensure that the users can access Service1 only from the Microsoft Entra joined computers -> conditional access policy
+--
+discover that when a user account is disabled in Active Directory, the disabled user can still authenticate to EntraID for up to 30 minutes
+configure Conditional Access policies -> no
+configure Microsoft Entra password protection -> no
+configure password writeback -> no
+configure pass-through authentication -> yes
+--
+ensure that only users who accept the terms of use can access resources in the tenant. All other users must be denied access. -> conditional access policy
+--
+plan to connect Permissions Management to AWS
+->New-AzureADApplication  -DisplayName "mciem-aws-oidc-connector" 
+-> -IdentifierUris "api://mciem-aws-oidc-app"
+q 353
