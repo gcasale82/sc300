@@ -115,4 +115,94 @@ ensure that only users who accept the terms of use can access resources in the t
 plan to connect Permissions Management to AWS
 ->New-AzureADApplication  -DisplayName "mciem-aws-oidc-connector" 
 -> -IdentifierUris "api://mciem-aws-oidc-app"
-q 353
+---
+Microsoft Entra application proxy publishes on-premises web applications for remote access through Microsoft Entra ID. Users sign in to Microsoft Entra ID before they reach the app (preauthentication), so Conditional Access and multifactor authentication apply to the published apps. For SharePoint Online, the Conditional Access session control Use app enforced restrictions applies SharePoint's site-level access settings, such as limited, web-only access from unmanaged devices.
+-> publish with application proxy
+-> app-enforced restriction
+--
+Conditional Access template policies that target users automatically exclude only the user who creates the policy
+--
+A User Administrator assigned at an administrative-unit scope can reset passwords only for users who are direct members of that administrative unit. Adding Group1 to Au1 scopes management of the group itself, not management of Group1’s individual members.
+--
+You need to ensure that Microsoft Entra ID Protection can detect leaked credentials for the users synchronized from adatum.com
+Password hash synchronization enables Microsoft Entra ID Protection to detect leaked credentials for hybrid accounts by validating newly discovered compromised credentials against current synchronized password hashes. Only credentials discovered after PHS is enabled are processed
+--
+Microsoft Entra Cloud Sync, scoping filter : CN=Group1,OU=OU1,DC=contoso,DC=com -> users of group1 and group1, user of group2 excluded, users of nested group are excluded
+--
+Which user can create appointments in every user's calendar at the company?-> User2 , app2 permissions = calendar read and write for application
+Microsoft Graph Calendars.ReadWrite as an application permission allows an app to create, read, update, and delete events in all calendars without a signed-in user. User2 uses App2, which has that application permission
+--
+dynamic membership group named LWGroup1 that contains all Litware user accounts but excludes all guest accounts
+-> user.objectId -ne ->null and (user.userType -eq ->"Member")
+--
+ remove the Office 365 Enterprise E3 licenses from the users with the least administrative effort -> Set-MgUserLicense
+--
+App1 can access App2. which credentials ? -> certificate,secret
+--
+Per-device terms of use uses a Microsoft Entra registered device’s device ID, so a user must accept the terms separately on Device1. Device2 is not registered and therefore cannot satisfy per-device terms of use. The Device3 consent accepted on November 15 remains current through December 7; scheduled expiration starts on December 10, after which consent expires and periodic reacceptance applies
+---
+Number matching is used with Microsoft Authenticator push notifications
+--
+users try to give App1 access to the tenant, the attempt fails. -> enable admin consent requests for the tenant
+--
+need to onboard Permissions Management.
+-> configure data collection
+-> create role assignment Sub1
+--
+A 14-day review occurrence that starts January 15 closes before February 5, and the next monthly occurrence starts February 15. A self-reviewer may change a response until the review instance ends, so User2 can change the January 20 response on January 25. With Users review their own access, the reviewers are the Group1 members under review; User3 is only an owner, not a member, so User3 has no access to review.
+--
+Microsoft 365 subscription that includes users running Microsoft Outlook 2016 and Outlook 2013 clients -  implement tenant restrictions
+-> configure outlook 2013 clients to use modern authentication
+--
+User1 can read the metadata of certificates, keys, and secrets stored in Vault1 -> Key vault reader
+--
+Microsoft 365 group naming policies exempt Global Administrators and User Administrators. Groups Administrators are permitted to configure naming policies but are not among the exempt roles, and users with no listed administrative role are also subject to the policy
+--
+Group-based assignment to an enterprise application requires Microsoft Entra ID P1 or P2 and is supported only for security-enabled groups (SecurityEnabled = True). Group1 is a security group. Group4 is a mail-enabled security group
+--
+need to enable Microsoft Entra sign-in for VM1 and configure VM1 to access resources in Sub1 -> system assigned managed identity
+--
+A registered Microsoft Entra application is represented by a service principal, which provides the application's identity for authentication and authorization. A user-assigned managed identity can be assigned to multiple resources, allowing VM1 and VM2 to share one identity for storage access; a system-assigned identity is tied to a single resource
+check if service principal o system assigned identity
+--
+Automation1 is deleted, the permissions granted for Vault1 are removed automatically-> system assigned managed identity
+can read secret values stored in Vault1 -> Key vault secret user
+--
+Password Administrator can reset passwords only for users with no admin role or with the Directory Readers, Guest Inviter, or Password Administrator roles; any other role (such as Global Reader) can only be reset by a Privileged Authentication Administrator or Global Administrator
+---
+🔐 CHI PUÒ RESETTARE LE PASSWORD IN MICROSOFT ENTRA ID (SC-300)
+│
+├── 🌍 1. AMBITO TENANT (Tenant Scope)
+│   │
+│   ├── 👑 Global Administrator / Privileged Authentication Administrator
+│   │   └── ✅ Può resettare CHIUNQUE (inclusi altri Global Admin e ruoli privilegiati)
+│   │
+│   ├── 🛠️ Authentication Administrator
+│   │   └── ✅ Può resettare utenti SENZA ruoli e ruoli NON privilegiati (es. Global Reader, Directory Readers, Guest Inviter, Helpdesk Admin)
+│   │   └── ❌ NON può resettare: Global Admin, Privileged Auth Admin, Password Admin, Security Admin, ecc.
+│   │
+│   └── 🔑 Password Administrator (Es. User1 nello scenario)
+│       ├── ✅ Utenti SENZA alcun ruolo (Es. User3, User5)
+│       ├── ✅ Ruoli specifici consentiti:
+│       │   ├── Password Administrator (Es. User4)
+│       │   ├── Directory Readers
+│       │   └── Guest Inviter
+│       └── ❌ TUTTI gli altri ruoli (Es. User2 che è Global Reader -> BLOCCATO)
+│
+└── 📦 2. AMBITO ADMINISTRATIVE UNIT (AU Scope)
+    │
+    └── 🔑 Password Administrator assegnato a una AU (Es. User4 su AU1)
+        ├── ⚠️ Regola 1 (Perimetro): Agisce SOLO sui membri della AU (User5 fuori da AU1 -> ESCLUSO)
+        ├── ⚠️ Regola 2 (Restrizione ruoli): Può resettare SOLO utenti SENZA alcun ruolo admin (Es. User3)
+        └── ❌ NESSUNA ECCEZIONE PER RUOLI:
+            ├── ❌ Global Reader (Es. User2 -> BLOCCATO)
+            └── ❌ Altri Password Administrator (Es. User1 -> BLOCCATO, la regola del Tenant non vale nella AU!)
+---
+PIM for Groups can manage just-in-time membership or ownership for any Microsoft Entra security group or Microsoft 365 group, including both role-assignable and non-role-assignable groups. Only dynamic-membership groups and groups synchronized from on-premises environments are excluded
+---
+onboard Microsoft Entra Permissions Management.
+ensure that Permissions Management users can manage role assignments for Sub1
+-> user access administrator
+identity->Cloud Infrastructure Entitlements Management
+--
+q 389 
