@@ -205,4 +205,248 @@ ensure that Permissions Management users can manage role assignments for Sub1
 -> user access administrator
 identity->Cloud Infrastructure Entitlements Management
 --
-q 389 
+Managed1 and Managed2 are user-assigned managed identities. These are standalone Azure resources that can be assigned to more than one resource, and they can be used across Azure regions. A virtual machine or an App Service app can have one system-assigned identity plus multiple user-assigned identities. So VM1 can use Managed1 and Managed2, and App1 can enable its own system-assigned identity and also use Managed1 and Managed2. User1 is a Microsoft Entra user, not a workload identity, so it can't be assigned to either resource as its identity
+---
+retired - Microsoft Entra Permissions Management - 
+identify billable Azure resources.
+Create a rule to remove permissions for unused resources
+-> Settings provides the Billable resources view for an authorization system. Autopilot creates permission-remediation rules, including rules that remove unused permissions from Azure applications and managed identities
+--
+Although both Conditional Access and PIM require MFA, PIM requires MFA only once per session; an MFA claim already established in the session prevents a second prompt.
+--
+need to create a Conditional Access policy that uses a Global Secure Access security profile. The solution must prevent users from accessing websites whose URLs contain the word gambling -> web content filtering policy
+--
+Microsoft Entra tenant contoso.com - create an access package named package1 that will be available only to Fabrikam users - allow only one domain mail address of Fabrikam users :
+allow access for users who have fabrikam.com email addresses -> access package policy in ID Governance
+block access users litware.com mail -> External collaboration settings in Microsoft Entra ID
+expl: External collaboration settings support a B2B allowlist or blocklist for email domains
+--
+need to ensure that the external user can authenticate by using the updated email address -> reset redemption status
+--
+Security groups can contain users and other security groups, including Security groups with assigned or dynamic membership
+Microsoft 365 groups can contain only users
+--
+ensure that the support team can reset passwords and manage multifactor authentication (MFA) settings for only the executives
+-> administrative unit
+-> authentication administrator
+--
+conditional access policy
+Conditions
+Filter for devices: Exclude filtered devices from the policy
+Rule syntax: device.displayName -startsWith “Device”
+Conditional Access device filters evaluate device attributes only for registered Microsoft Entra devices. Device1 is unregistered, so its properties are null and it does not satisfy the positive -startsWith exclusion
+--
+Attribute Definition Administrator role can manage custom security attribute definitions
+Custom security attributes can be assigned to -> user and service principal/identity not group
+--
+user.usageLocation -in ["US","AU"] -and (user.department -eq "Sales") -and -not (user.jobTitle -eq "Manager") -or (user.jobTitle -eq "SalesRep") 
+precedence in before -not, -and, and -or
+--
+CA policy , Session: Use app enforced restrictions -> non compliant devices(also if joined) and unmanaged limited access
+treats a device as managed only if it is Microsoft Entra hybrid joined or compliant in Intune
+--
+retired, Azure ABAC role-assignment conditions can be added to built-in or custom roles that have supported Blob Storage or Queue Storage data actions. Storage Blob Data Reader is explicitly a supported built-in role, so the role assigned to User3 supports ABAC
+--
+access review to review user membership -> except dynamic device group
+--
+need to ensure that users can connect to Exchange Online only from email clients that use Modern authentication protocols -> conditional access policy
+--
+Only members of the configured requestor scope, Group1, can request Package1; therefore User1 can request it, whereas User2, who belongs only to Group2, cannot. Package1 grants the Team1 Owner resource role upon assignment. An approver cannot approve their own access-package request, so User3’s request must be handled by another eligible approver.
+--
+Admin1 uses the Require password change for high-risk users policy template to create a new Conditional Access policy
+included -> All users
+exclude -> Admin1
+--
+app consent for the subscription
+Disable user consent to apps -> Microsoft Entra admin center
+Configure admin consent workflow for apps -> Microsoft Entra admin center
+--
+buy a cloud application named App1-  enable real-time, session-level monitoring for App1 by using Microsoft Defender for Cloud Apps.
+sequence : publish App1 in Ms EntraID , create CA with session controls, from Defender create session policy
+--
+Conditional Access exclusions override inclusions
+--
+make sure that User2 can configure alternative MFA methods. Which configuration is required, and which user must perform it?
+-> modify security default
+-> Security administrator
+expl: Security defaults provide a fixed baseline MFA configuration rather than allowing customization of the MFA methods. Modifying security defaults is therefore required to permit alternate methods
+--
+scenario: tech req : License allocation for new users must be assigned automatically based on the location of the user.
+Which type of object should you create?
+-> dynamic user security group
+--
+You need to configure the tenant’s External collaboration settings to meet the following requirements:
+
+Guest users must not be able to query staff email addresses.
+Guest users must access the tenant only when invited by User1.
+Which three settings should you configure?
+
+Select
+Guest user access restrictions: -> Guest user access is restricted to properties and memberships of their own directory objects (most restrictive)
+Guest invite restrictions: -> Only users assigned to specific admin roles can invite guest users
+Enable guest self-service sign up via user flows: -> No
+--
+configure Microsoft Entra ID license assignment for the Litware users. The solution must meet the licensing requirements.
+reqs :
+Litware wants to manage the assignment of Azure AD licenses by modifying the value of the LWLicenses attribute.
+Users who have the appropriate value for LWLicenses must be added automatically to a Microsoft 365 group that has the appropriate licenses assigned.
+Microsoft Entra Connect Sync settings to modify: -> Directory Extensions
+Assign licenses to:-> A Microsoft Entra group that has the Dynamic User membership type
+--
+Groups used for Microsoft Entra role assignments must have Assigned membership (not Dynamic) and can be either Security groups or Microsoft 365 groups; the role-assignable flag must be set at group creation.
+--
+How long does Microsoft Entra ID retain events in the sign-in logs? -> 30 days
+--
+Tou -> pdf
+--
+A user-assigned managed identity's Microsoft Entra service principal is available regardless of region, so a managed identity can be assigned to a virtual machine in any Azure region: both Managed2 (East US) and Managed3 (West US) can be assigned to V1 in East US. V1's system-assigned managed identity remains disabled, so V1 has no identity of its own and cannot itself be selected as a principal for an RBAC role assignment; only Managed1, the user-assigned identity already attached to it, can receive the Owner role at RG1.
+--
+retired: need to ensure that User1 can onboard Sub1 to Permissions Management. -> Microsoft.Authorization/roleAssignments/write at the Sub1 
+--
+Litware identifies the following delegation requirements:
+Use custom catalogs for Microsoft Entra ID Governance.
+Delegate the management of application access to department managers who are not administrators.
+track application access assignments -> create a catalog
+--
+An allow list permits invitations only to Outlook.com. A pending invitation from an allowed Outlook.com address can be redeemed. A guest who already redeemed an invitation is not retroactively affected by a subsequently configured allow/deny list, so existing authorized access remains available. An invitation to a domain outside the allow list, such as adatum.com, is blocked and cannot provide SharePoint access.
+--
+2 DC no internet , server 3 entra connect, server4 unassigned
+req : HA where install additional pass-through authentication agent -> server 4
+--
+stop users from creating user accounts in the contoso.com Microsoft Entra tenant through self-service sign-up for Microsoft 365 services
+-> Update-MgPolicyAuthorizationPolicy
+--
+Ad - Microsoft Entra Connect Sync
+SSPR reqs:
+when reset password -> mfa or security questions -> authentication methods (from password reset blades)
+password sync between tenant and AD -> password writeback
+--
+Implement Microsoft Entra certificate-based authentication. The solution must ensure users can sign in using certificates issued by CA1 -> Add CA1 certificate authority to MS entra id tenant
+--
+retired : configure detection for multistage attacks to meet the monitoring requirements -> sentinel rule logic
+--
+need to be alerted when a registered application is granted read and write access to users’ email.-> Microsoft Defender for Cloud Apps , OAuth app policy
+--
+which objects can be added as eligible in (PIM) -> User objects, including guest users (excluded SP and managed identity)
+--
+With User assignment required? set to No, any user in the tenant can sign in to App1 by using the homepage URL, so all users can access it. Visible to users? set to Yes makes the app appear in My Apps and the Microsoft 365 app launcher, but only for users who are assigned to it. Assignment controls visibility in the launcher regardless of whether assignment is required, so App1 appears only for the users and groups listed on the Users and groups blade.
+--
+Microsoft Entra logs are sent to a Log Analytics workspace.
+You need to query the logs and display the number of sign-ins for each user graphically.
+SigninLogs
+| where ResultType == 0
+| -> summarize login_count = count() by Identity
+-> render columnchart
+--
+risk detection type is categorized as a user risk? -> leaked crentials
+--
+Impossible travel, anonymous IP address, and atypical travel are sign-in-risk detections
+--
+Create a Microsoft 365 group -> entra admin center/Intune admin center
+assign entra suite license -> ms 365 admin center
+--
+need to synchronize the members of Group1 to fabrikam.com
+req: only IT dep users, min effort
+configuration object -> From Users and groups, add Group1.
+For the configuration object from Settings -> add scoping filter
+--
+A Helpdesk Administrator assigned at administrative-unit scope can reset passwords only for non-administrator users in that unit
+A Privileged Authentication Administrator can reset passwords for any user, including administrators
+--
+Global Administrator does not, by default, have custom security attribute permissions. Attribute Assignment Administrator can assign attribute values but cannot modify attribute definitions. Custom security attributes can be assigned only to users and service principals, not security groups.
+--
+Password Administrator can reset that non-administrator user’s password
+--
+need to ensure that remote users can access WebApp1 by using Microsoft Entra Private Access. -> create application segment
+Microsoft Entra Private Access requires an application segment to define the private resource destination, port, and protocol that the Global Secure Access client should route through the selected connector group
+--
+-> add a data source
+Defender for Cloud Apps uses Cloud Discovery automatic log upload to receive traffic logs automatically from a firewall or proxy. Configuration begins by creating a matching data source for that gateway; the log collector is then configured and associated with the data source.
+--
+need to automatically identify and block the use of unsanctioned apps that have a risk score of 5 or lower and generate more than 200 GB of daily traffic -> app discovery policy using new risky app template
+--
+on-premises Active Directory Domain Services (AD DS) domain - plan to create 300 new users from excel
+-> New-ADUser and import csv
+--
+PIM allows 24 hours for delegated approvers to approve a role-activation request
+--
+need to ensure that Query1 can be run against the Microsoft Entra activity logs
+-> from diagnostic settings send logs to Log Analytics workspace
+--
+Conditional Access Administrator and Security Administrator are supported roles for creating and managing Conditional Access policies
+--
+PIM for Groups lets a user activate only an eligible membership or ownership assignment in a group that is managed in PIM. Only Group2 is onboarded to PIM, and User2 has no eligible assignment for Group1, so User2 can't request Group1 membership by using PIM. If a user is an active member of Group A and Group A is an eligible member of Group B, the user can activate their own membership in Group B; only the requesting user becomes an active member, not the whole of Group A. User3 and User4 are both active members of Group1, so both can request Group2 membership. User4's active owner assignment on Group2 is a separate assignment and doesn't prevent a membership activation.
+--
+Automatically detect and remediate externally leaked credentials.
+need to meet the authentication requirements for leaked credentials.
+-> enable password hash synchronization
+--
+implement restrictions for on-premises applications and SharePoint Online to meet the authentication and access requirements
+on premise apps -> Publish the applications by using Azure AD Application Proxy.
+Sharepoint online ->  Configure Cloud App Security policies
+--
+track application access assignments using Identity Governance. -> create a catalog
+--
+Log Analytics workspace technical requirements for auditing -> Diagnostic settings
+--
+One connected organization can contain multiple directories and domains. It can include Fabrikam’s Azure AD tenant, covering its verified domains, and both Litware domains. An access package policy can then be scoped to that connected organization, subject to the required external authentication and collaboration settings
+--
+able to view Azure Active Directory (Azure AD) audit log information by using Azure Monitor-> modify diagnostic settings for Azure AD
+--
+Users can register applications is set to No. - need to ensure that Admin1 can register App1 in Azure AD -> application developer
+--
+Enterprise application roles can be assigned to security groups. Group1 is a security group, and Group4 is a mail-enabled security group
+--
+SSPR alid authentication method is available to users -> mobile app code
+--
+3 MFA denials to trigger account lockout - account lockout counter 60 minutes - account automatically unblocked 30 minutes
+->A user account will be locked out if the user enters the wrong mfa app code 3 times
+If a user account is locked, the user can sign in again successfully after -> 30 minutes
+--
+MFA settings user1=disabled, user2=enabled,user3=enforced;
+User1 remains Disabled, and User3 remains Enforced. If User2 completes MFA registration when signing in, User2 changes from Enabled to Enforced. The 20-day trusted-device setting affects subsequent MFA prompts, not the users’ per-user MFA states.
+--
+You need to prevent users from creating user accounts in the contoso.com Azure AD tenant through self-service sign-up for Microsoft 365 services -> Set-MsolCompanySettings
+--
+Some users report that they received an MFA prompt on their Microsoft Authenticator app without having initiated a sign-in request.
+configure the Block/unblock users settings for multi-factor authentication (MFA). -> No
+Azure portal, you configure the Fraud alert settings for multi-factor authentication (MFA). -> No
+Report suspicious activity, marks reporting users as high risk; automatic blocking requires a suitable risk-based Conditional Access policy or custom automation
+--
+Group-based licensing works with security groups and Microsoft 365 groups, and licenses can be assigned whether membership is assigned or dynamic for users. Group1's nested groups do not inherit the license. Group3 is a dynamic device group whose only member is a device it is excluded.
+--
+need to remove the Office 365 Enterprise E3 licenses from the users with the least administrative effort.
+-> licenses blade entra admin center
+--
+need to ensure that you can give the contractor access to App1. The contractor must be able to authenticate as user1@outlook.com
+-> create guest user account in contoso.com
+--
+Configure the user risk policy -> Security administrator
+View the risky users report: -> Security administrator, Security operator
+--
+need to ensure that you can give the contractor access to App1. The contractor must be able to authenticate as user1@outlook.com
+-> New-AzureADMSInvitation does (current equivalent: New-MgInvitation)
+--
+group1,group3 cloud
+group2 on premise AD
+user1= group1,not-synced
+user2= group2,not synced
+user3=group2,synced
+access review: type=teams+groups, scope=all users , group=group2/3 ,reviewers=own access, if not respond=remove access 
+if not respond:
+->user1 not removed
+-> user2 removed
+-> user3 not removed
+rule: group scope of access review, if a group is cloud, cannot update membership on AD sync users
+--
+need to create an entitlement management workflow to manage Site1 and Team1.-> create access package
+--
+the maximum number of days after deletion that you have to restore the app registration -> 30
+--
+You configure User consent settings to let users provide consent to apps from verified publishers.
+You need to ensure that users can provide consent only to apps that require low impact permissions.
+-> configure permissions classifications
+--
+User1 needs to configure a new connector group for an application proxy -> entra id admin center
+--
+q 492
