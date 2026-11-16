@@ -449,4 +449,50 @@ You need to ensure that users can provide consent only to apps that require low 
 --
 User1 needs to configure a new connector group for an application proxy -> entra id admin center
 --
-q 492
+PIM
+on activation require MFA = User1 requires Azure Multi-Factor Authentication (MFA) to activate the Global Administrator role
+edit the Global Administrator role assignment: User3 can manage role assignments as a Global Administrator, but User2's Privileged Authentication Administrator role does not grant that permission
+--
+need to ensure that User1 can change the review frequency of Package1 -> Identity Governance administrator
+--
+You purchase an app governance add-on license - You need to enable the app governance integration -> MS 365 Defender
+--
+default MFA -> MS authenticator
+--
+Disable user consent to apps -> Microsoft Entra admin center
+Configure admin consent workflow for apps -> Microsoft Entra admin center
+--
+need to assess and remediate the risks associated with highly privileged accounts -> PIM
+--
+how long are the risky user activity logs retained? -> 90 days
+--
+create a Microsoft Defender for Cloud Apps session policy - What should you do first? -> Create a Microsoft Entra Conditional Access policy 
+--
+A managed identity is either system-assigned, tied to and usable only by its own resource, or user-assigned, a standalone resource that can be attached to several resources. Both VMs and App Service apps support managed identities, so VM1 can use the managed identities in the table (Managed1 and Managed2) and App1 can use its own system-assigned identity plus the shared user-assigned Managed2. A system-assigned identity belonging to another resource cannot be shared. An Entra user such as User1 is not a managed identity, so any option containing User1 is wrong.
+--
+users report that they received an MFA prompt on their Microsoft Authenticator app without having initiated a sign-in request.
+configure the Notifications settings for multi-factor authentication (MFA) -> No
+--
+Azure ABAC adds conditions to Azure role assignments and supports controlling access to blob and queue data in a storage account. These conditions apply to supported data operations, not storage account management operations
+--
+access review
+User1 — Yes: User1 is an owner assigned as a reviewer and is also a user member in scope. A fallback reviewer is needed when the group has no owner, not merely because an owner is also a member.
+Managed2 — No: The All users scope covers user objects. Managed2 is a managed identity, represented by a service principal, rather than a user object.
+User3 — Yes: Group reviews flatten nested groups and include their users. A denial does not automatically remove a user from the nested group
+--
+enable real-time session-level monitoring of App1 using Microsoft Defender for Cloud Apps
+sequence:Register App1 in Entra ID, create CA with session controls, from Ms defender for cloud apps modify connected apps settings for App1, From Ms defender for cloud apps create session policy
+--
+Dynamic User administrative unit does not support group members
+AU Dynamic membership rule: (user.department -eq "hr") match HR (case insensitive)
+The department value IT does not match the rule, so the prior assigned membership does not remain
+--
+ensure that users can connect to Exchange Online only through email clients that use Modern authentication protocols -> CA
+--
+Linux devices + Global Secure Access Internet Access. -> remote network
+--
+The default innerunique join returns a user-creation record only when the created user's principal name matches the caller of an Azure Activity. All No
+--
+Microsoft Graph activity logs record HTTP requests processed for the tenant. These include requests to list Conditional Access policies, retrieve mailbox messages, and create guest invitations through Microsoft Graph. Therefore, all three tactics can be analyzed when their Graph requests are logged
+--
+Microsoft Defender for Cloud Apps, with Cloud Discovery enabled - enrich the Cloud Discovery data. The solution must ensure that usernames in the Cloud Discovery traffic logs are associated with the user principal name (UPN) -> create MS 365 app connector
