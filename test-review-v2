@@ -1,0 +1,188 @@
+You have an Entitlement management catalog named Catalog1 that contains the following resources:
+A team named Team1
+An enterprise application named App1
+You need to create an access package that contains the resources from Catalog1 and only allows requests from a partner organization named contoso.com.
+-> Add contoso.com as a connected organization.
+--
+ou create access packages for onboarding new users.
+Your marketing department needs support from external business partner users that are not yet in your Microsoft Entra tenant.
+What should you use to enable an access package request?
+-> My access portal link
+--
+You create several access packages by using entitlement management.
+You need to add a group to the Entitlement catalog used for the access packages.
+Which PowerShell command should you run?
+-> New-MgEntitlementManagementAccessPackageResourceRequestCatalog
+--
+You need to automatically remove the external users from the directory when their access package assignments expire and they have no other assignments.
+-> the Lifecycle of external users setting
+--
+You have 100 Azure subscriptions grouped in different management groups.
+You want to group access reviews based on the management group hierarchy.
+Which Identity Governance component should you use?
+-> programs
+--
+You need to implement a process to regularly review guest user access to ensure security and compliance with the least amount of administrative overhead.
+-> Create recurring access reviews for Microsoft 365 groups with guest users.
+--
+You need to implement a process to regularly review and update access to these applications to mitigate security risks. The process should be resilient for cases when default reviewers are unavailable.
+->Assign fallback reviewers for unresponsive primary reviewers.
+->Create recurring access reviews for each application.
+--
+You plan to provide Admin1 with access to the Application Developer role. The solution must meet the following requirements:
+Multifactor authentication (MFA) must be used when requesting access to the role.
+Access must only be valid for a maximum of three hours.
+-> PIM
+--
+You need users from your IT department to have security administrator rights. The solution must require an approval process.
+-> eligible assignment
+--
+PIM- You need to review all the role assignments and activations from the last 20 days for all the privileged roles. Your solution must minimize administrative effort.
+From Privileged Identity Management, use the Resource audit blade.
+--
+ou plan to find inactive user accounts in Microsoft Entra by using the following Microsoft Graph query.
+https://graph.microsoft.com/beta/users?filter=signInActivity/lastSignInDateTime le 2019-06-01T00:00:00Z
+You need to identify the minimum permissions required to execute the query.
+-> AuditLog.Read.All and Directory.Read.All
+--
+have an existing set up of Azure Monitor, and you want to add Microsoft Entra log data.
+->P1 or P2 license
+--
+need to ensure that each administrator can only manage the devices of their respective department
+-> administrative units
+--
+need to restrict access to the Microsoft Entra admin center for all non-administrative users from all devices
+-> User settings
+--
+You need to identify the product SKU ID assigned to Group1.
+-> GET https://graph.microsoft.com/v1.0/groups/99c4216a-56de-42c4-a4ac-e411cd8c7c41?$select=assignedLicenses
+--
+need to assign the Microsoft Entra P2 license to a group named Marketing.
+-> Microsoft 365 admin center
+--
+You need to automatically assign a Microsoft 365 E5 license to users for whom the Department attribute equals Sales.
+-> A dynamic membership user group
+--
+You plan to bulk invite multiple external users.
+You need to create a file that will identify which users to invite.
+What should you include in the first row of the file?
+-> the version number
+expl: The first row of the CSV file used to perform a bulk invite must contain the version number.
+Column headings are in the second line.
+The file does not contain the schema URI and column data types.
+The invitee email address and redirection URL are not added until the third line and beyond.
+--
+You need to enable B2B direct connect with Contoso. The solution must ensure that only Contoso users can connect to your tenant.
+-> Set the default settings to block all inbound and outbound access and set specific organizational settings for the partner organization.
+--
+You need to ensure that User1 can access your tenant and enumerate all users and groups. The solution must follow the principle of least privilege.
+->invite as guest user assign global reader role
+--
+configure authentication for Microsoft Entra Connect Sync - User-level Active Directory security policies must be enforced.
+-> pass-through authentication and seamless SSO
+--
+third-party LDAP identity provider. - Microsoft Entra Connect Sync - You need to configure authentication for Microsoft Entra Connect Sync. The solution must integrate with the third-party LDAP identity provider
+-> federation
+--
+need to configure authentication for Microsoft Entra Connect Sync. The solution must meet the following requirements:
+Users with AD DS credentials must have their sign-ins validated by the AD DS domain.
+Sign-in disaster recovery and leaked credentials reports must be supported.
+-> federation with password hash synchronization
+--
+need to immediately prevent user authentication in Microsoft Entra tenant when an account is disabled in the on-premises Active Directory domain
+-> pass-through authentication
+--
+AD FS for authentication in on-premises applications.
+You need to migrate these applications to Microsoft Entra ID to improve identity management
+-> Use the AD FS application migration wizard
+--
+You have several virtual machines that have user-assigned managed identities.
+
+You need to remove the managed identities
+-> Update-AzVM
+--
+10 virtual machines that host a three-tier workload. The workload requires access to a storage account and an Azure SQL database.
+-> user-assigned managed identity
+--
+VM1 is deployed by using a custom Azure Resource Manager (ARM) template.
+
+You need to ensure that VM1 can read the data that is stored in storage1.
+
+Which VM1 setting should you modify in the Azure portal?
+-> identity
+--
+need to ensure that users can also mount fileshare2. The solution must follow the principle of least privilege.
+-> ssign the Storage File Data SMB Share Contributor role for the VM1 managed identity to the fileshare2.
+--
+need to configure the same identity for VM1 and VM2 and minimize role-based access control (RBAC) role assignments.
+-> user-assigned managed identity
+--
+need to ensure that the members of group1 are automatically allowed to use App1 and are assigned a license for App1.
+-> Provisioning
+--
+Your development team creates an application that requires the GroupMember.Read.All permission on the Microsoft Graph API to be used on behalf of a user.
+-> Add delegated permissions.
+-> Create an app registration.
+-> Grant admin consent to the app.
+--
+You need to assign a role that can create an app registration in the Microsoft Entra tenant
+-> Application developer
+--
+Your development team wants to use social accounts to grant access to a new app for the marketing department.
+-> app registration
+--
+You are evaluating Microsoft Defender for Cloud Apps.
+You need to identify the four subcategories used to score apps
+-> General, Security, Compliance, and Legal
+--
+You discover that no data appears on the Cloud Discovery dashboard.
+You need to get data onto the Cloud Discovery dashboard.
+-> snapshot report
+--
+Microsoft Defender for Cloud Apps
+You need to implement a solution that prevents the download of sensitive documents on unmanaged devices while allowing access to other resources.
+-> Use Conditional Access App Control to block downloads on unmanaged devices
+--
+MFA recommend the most secure authentication method for the deployment.
+-> passkey fido2
+--
+plan to implement Windows Hello for Business authentication
+-> hybrid Microsoft Entra join authentication by using Microsoft Entra Kerberos (cloud Kerberos trust)
+expl: Microsoft Entra-joined devices authenticate to Azure during sign in and can optionally authenticate to Active Directory. Hybrid Microsoft Entra-joined devices authenticate to Active Directory during sign in and authenticate to Microsoft Entra in the background.
+--
+MFA primary authentication
+-> passkey, fido2
+--
+You enable Microsoft Entra certificate-based authentication as an authentication method for Microsoft Teams on iOS devices.
+Which certificate binding is considered high-affinity?
+-> X509SKI
+--
+CA policy -  identify the signals that can be included as part of the policies.
+-> device operating system, application, and IP location information
+--
+need to prevent users from signing into your environment from devices marked as noncompliant.
+-> a Conditional Access policy
+--
+You want to create a Conditional Access policy, but you discover that the option to create a new policy is unavailable.
+-> Security defaults are enabled.
+--
+CA policy - can you use to analyze the impact of session controls?
+-> What-if tool
+--
+need to ensure that changes to a Conditional Access policy apply to a specific user immediately.
+-> Run the Revoke-MgUserSign cmdlet.
+-> Select Revoke Session on the user profile page.
+--
+need to configure CApolicy1 to provide users with access to contoso.com from only specific IP addresses.
+-> named locations
+--
+You are evaluating the use of Microsoft Entra ID Protection Sign-in risk policy and User risk policy.
+You need to identify available access controls across both policy types.
+-> block access
+--
+You need to ensure that the members of Group1 can connect to on-premises applications by using Microsoft Entra Private Access.
+-> private network connector
+--
+You plan to implement Microsoft Entra Private Access and Microsoft Entra Internet Access.
+You need to purchase licenses for your company. The solution must minimize costs.
+-> Microsoft Entra Suite
