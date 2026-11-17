@@ -1,0 +1,249 @@
+================================================================================
+
+SC-300 EXAM PREP: MICROSOFT ENTRA ID ACCESS REVIEWS
+
+================================================================================
+
+
+
+--------------------------------------------------------------------------------
+
+1. LICENSING & PREREQUISITES (COMMON EXAM TRAP)
+
+--------------------------------------------------------------------------------
+
+- Required License: Microsoft Entra ID P2 (or Microsoft Entra ID Governance).
+
+- Ratio Rule: You must have a P2 license for EVERY user who is:
+
+  1. Being reviewed (Scope).
+
+  2. Performing the review (Reviewer).
+
+  3. Configuring/Managing the review (Admin/Creator).
+
+  *TRAP*: Guests do NOT require individual P2 licenses if you use the 1:5 billing 
+
+  model (1 P2 license covers up to 5 external/guest users), OR if MAU (Monthly 
+
+  Active Users) billing is enabled.
+
+
+
+--------------------------------------------------------------------------------
+
+2. REVIEW TYPES & SCOPE
+
+--------------------------------------------------------------------------------
+
+A. Teams + Groups
+
+   - Option 1: All Microsoft 365 groups with guest users
+
+     *TRAP*: Automatically EXCLUDES Dynamic Groups and Role-Assignable Groups!
+
+     (You cannot review membership of dynamic groups because membership is 
+
+     rule-based, not manual).
+
+   - Option 2: Select Teams + groups
+
+     *TRAP*: Can target Security groups or M365 groups, ONLY if they have 
+
+     "Assigned" membership (no dynamic groups).
+
+
+
+B. Applications
+
+   - Reviews users/groups assigned to a specific Enterprise Application.
+
+   - *TRAP*: App must be integrated with Entra ID for SSO/provisioning.
+
+
+
+C. User Scope (Who is reviewed?)
+
+   - Guest users only vs. Everyone.
+
+   - Inactive users only (Tenant-level):
+
+     *TRAP*: "Inactive users (on tenant level) only" ONLY works if you select 
+
+     "Guest users only". You CANNOT use the tenant-level inactivity filter 
+
+     when reviewing "Everyone" (internal members).
+
+
+
+--------------------------------------------------------------------------------
+
+3. REVIEWERS & MULTI-STAGE REVIEWS
+
+--------------------------------------------------------------------------------
+
+- Reviewer Options:
+
+  1. Group owners (Only available when reviewing Teams/Groups).
+
+  2. Selected users or groups (Specific people, e.g., Security Team).
+
+  3. Users review their own access (Self-review).
+
+  4. Managers of users (Requires the 'Manager' attribute populated in Entra ID!).
+
+     *FALLBACK TRAP*: If a user has no Manager listed, or a group has no Owner, 
+
+     you MUST specify "Fallback reviewers" or the review won't have anyone to 
+
+     assign to.
+
+
+
+- Multi-Stage Review:
+
+  - Up to 3 stages (e.g., Stage 1: Manager -> Stage 2: Resource Owner -> Stage 3: Security).
+
+  - *TRAP*: You can choose whether Stage 2 sees ONLY the users approved in 
+
+    Stage 1, or ALL users regardless of Stage 1 outcome.
+
+
+
+--------------------------------------------------------------------------------
+
+4. SCHEDULE & RECURRENCE
+
+--------------------------------------------------------------------------------
+
+- Duration (in days): How long reviewers have to submit decisions before it closes.
+
+- Review Recurrence: One-time, Weekly, Monthly, Quarterly, Semi-annually, Annually.
+
+- Start Date & End: Never, End on specific date, or End after X occurrences.
+
+- *TRAP*: If Recurrence = Weekly, Duration CANNOT exceed 7 days. Duration must 
+
+  always be shorter than the recurrence cycle!
+
+
+
+--------------------------------------------------------------------------------
+
+5. SETTINGS & DECISION HELPERS
+
+--------------------------------------------------------------------------------
+
+- Auto apply results to resource:
+
+  - Enable: Automatically removes denied users when the review ends.
+
+  - Disable: Admin must manually apply changes after the review completes.
+
+  - *TRAP*: If reviewing a Dynamic Group (via an App assignment), auto-apply 
+
+    CANNOT remove a user from a dynamic group; it will fail/require manual intervention.
+
+
+
+- If reviewers don't respond (Fallback action):
+
+  - No change (Leaves access as-is).
+
+  - Remove access (Revokes access - strictest security posture).
+
+  - Approve access (Keeps access).
+
+  - Take recommendations (Applies the system's AI/helper recommendation).
+
+
+
+- At end of review, send notification to: Sends summary email to specified users/groups.
+
+
+
+- Enable reviewer decision helpers:
+
+  1. No sign-in within 30 days: Flags inactive users with a "Deny" recommendation.
+
+  2. User-to-group affiliation: Compares user's attributes/manager/department to 
+
+     peers in the group. Flags outliers with a "Deny" recommendation.
+
+
+
+- Advanced Settings:
+
+  - Justification required: Forces reviewer to type a reason for Approve/Deny.
+
+  - Email notifications: Sends start/end emails to reviewers.
+
+  - Reminders: Sends halfway-point reminder emails to incomplete reviewers.
+
+  - Additional content for reviewer email: Custom text/instructions added to the email.
+
+
+
+--------------------------------------------------------------------------------
+
+6. DELEGATION, PROGRAMS & HISTORY REPORTS
+
+--------------------------------------------------------------------------------
+
+- Delegate who can create and manage access reviews:
+
+  - By default, Global Admins, Identity Governance Admins, and User Admins 
+
+    can manage reviews.
+
+  - Group Owners: Setting "(Preview) Group owners can create and manage access 
+
+    reviews for groups they own" = YES/NO.
+
+    *TRAP*: If set to YES, Group Owners can ONLY create/manage reviews for 
+
+    groups they explicitly own—they cannot create app reviews or tenant-wide reviews.
+
+
+
+- Access Reviews Programs:
+
+  - Used to group multiple related access reviews together for compliance/auditing 
+
+    (e.g., "SOX Compliance 2026 Program").
+
+  - Requires creating a "Control" inside the program to link the review.
+
+
+
+- Access Reviews History Report:
+
+  - Used for auditing past review cycles.
+
+  - *TRAP*: Reports are NOT generated instantly in real-time; you request a 
+
+    report for a specific date range (up to 30 days), and once generated, you 
+
+    download it as a CSV file (retained for 30 days before deletion).
+
+
+
+================================================================================
+
+QUICK MEMORY CHEAT SHEET (SC-300)
+
+================================================================================
+
+1. Dynamic Groups & Role-Assignable Groups = EXCLUDED from "All M365 groups w/ guests".
+
+2. "Inactive users only" filter = GUESTS ONLY (cannot be used for internal users).
+
+3. Manager review = Needs Manager attribute + Fallback reviewer for orphans.
+
+4. Decision Helpers = 30-day no sign-in + User-to-group affiliation.
+
+5. Group Owner delegation = Scoped ONLY to groups they own.
+
+6. History Report = Exported to CSV, max 30-day retention.
+
+================================================================================
