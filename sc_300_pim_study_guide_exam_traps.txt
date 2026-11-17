@@ -1,0 +1,191 @@
+================================================================================
+SC-300 EXAM PREP: PRIVILEGED IDENTITY MANAGEMENT (PIM)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. CORE CONCEPTS & LICENSING (EXAM TRAPS)
+--------------------------------------------------------------------------------
+- License Required: Microsoft Entra ID P2 (or Entra ID Governance).
+  *TRAP*: You need a P2 license for EVERY user who is assigned an Eligible or 
+  Active PIM role, Approvers, and Admins managing PIM.
+- 3 PIM Scopes:
+  1. Microsoft Entra Roles (Directory roles like Global Admin, User Admin).
+  2. PIM for Groups (Just-in-Time Membership or Ownership of a group).
+  3. Azure Resources (RBAC roles on Subscriptions, Resource Groups, VMs).
+- Who can manage PIM for Entra Roles?
+  *TRAP*: ONLY "Privileged Role Administrator" or "Global Administrator" can 
+  manage PIM role assignments and settings. ("Security Administrator" can only 
+  VIEW/READ PIM settings, NOT modify them!).
+
+--------------------------------------------------------------------------------
+2. ASSIGNMENT TYPES & SCOPE
+--------------------------------------------------------------------------------
+- Membership / Scope:
+  - Directory-wide (Tenant) vs. Administrative Unit (AU) vs. Specific App.
+  *TRAP*: Only certain roles support Administrative Unit scoping (e.g., User 
+  Admin, Helpdesk Admin, Groups Admin). Global Admin CANNOT be scoped to an AU!
+- Assignment Types:
+  1. Eligible: User has the role, but it is dormant. Must "Activate" it (JIT) 
+     to use permissions. (Best Practice).
+  2. Active: User has permissions immediately without needing to activate.
+     *TRAP*: If you assign a role as "Active", you are immediately required to 
+     enter a "Justification" during assignment!
+- Duration (Start - End):
+  - Can be Time-bound (Start/End dates) OR Permanent ("Permanently eligible" / 
+    "Permanently active" - if allowed in Role Settings).
+  *TRAP*: Global Administrator CANNOT be "Permanently Active" in PIM if the 
+  default "Allow permanent active assignment" setting is turned OFF (which is 
+  a common security baseline question).
+
+--------------------------------------------------------------------------------
+3. ROLE SETTINGS (ACTIVATION, ASSIGNMENT, NOTIFICATIONS)
+--------------------------------------------------------------------------------
+A. ACTIVATION SETTINGS (What happens when an Eligible user activates?)
+   - Activation maximum duration: Default = 8 hours (Min: 30 mins / Max: 24 hrs).
+   - On activation, require:
+     * None
+     * Azure MFA (Prompts user for MFA upon activation).
+     * Conditional Access Authentication Context (e.g., requires compliant device 
+       or phishing-resistant MFA via CA policy!).
+     *TRAP*: If a user ALREADY satisfied MFA when signing into their session, 
+     selecting "Azure MFA" here won't prompt them again unless forced, whereas 
+     "Authentication Context" evaluates CA rules dynamically!
+   - Require justification on activation: Yes/No (Default: Yes).
+   - Require ticket information on activation: Yes/No (Default: No - requires 
+     Ticket System + Ticket Number).
+   - Require approval to activate: Yes/No (Default: No).
+     *TRAP*: If Yes, you MUST select "Approvers" (Users or Groups). If no 
+     approver is selected, activation will fail/be blocked.
+   - Custom Extensions (Preview):
+     * Pre-approval custom extension: Triggers Logic App BEFORE activation 
+       (e.g., checks ServiceNow ticket validity).
+     * Post-approval custom extension: Triggers Logic App AFTER activation 
+       (e.g., provisions external resources or logs to SIEM).
+
+B. ASSIGNMENT SETTINGS (Rules for Admins assigning the role)
+   - Allow permanent eligible assignment: Yes/No (If No, must set max expire 
+     days, e.g., 180 days).
+   - Allow permanent active assignment: Yes/No (Default for Global Admin is 
+     often set to No in hardened environments).
+   - Require Azure MFA on active assignment: Admin must pass MFA to assign.
+   - Require justification on active assignment: Default = Yes.
+
+C. NOTIFICATIONS (3 Triggers x 3 Email Types)
+   - Triggers:
+     1. When members are assigned as ELIGIBLE.
+     2. When members are assigned as ACTIVE.
+     3. When eligible members ACTIVATE the role.
+   - Email Types per trigger:
+     1. Role assignment/activation alert -> Default: Admin.
+     2. Notification to assigned/activated user -> Default: Assignee/Requestor.
+     3. Request to approve -> Default: Approver.
+   - *EXAM TRAP ("Critical emails only")*:
+     - If "Critical emails only" = False (Default): Sends ALL emails.
+     - If "Critical emails only" = True: ONLY sends emails that require immediate 
+       action (i.e., Approval requests!). Informational alerts to Admins and 
+       Assignees are SUPPRESSED!
+
+--------------------------------------------------------------------------------
+4. PRIVILEGED vs. NON-PRIVILEGED ROLES (CRITICAL EXAM TRAP!)
+--------------------------------------------------------------------------------
+Many SC-300 questions ask: "Which user can perform X without using a privileged 
+role?" OR "Restrict access only to non-privileged administrators."
+Microsoft defines specific Entra roles as "Privileged" (high impact/tier-0).
+
+*PRIVILEGED ROLES (DO NOT PICK THESE IF QUESTION SAYS "NON-PRIVILEGED"):*
+- Global Administrator
+- Privileged Role Administrator
+- Security Administrator
+- User Administrator
+- Exchange Administrator / SharePoint Administrator
+- Conditional Access Administrator
+- Application Administrator / Cloud Application Administrator
+- Authentication Administrator / Privileged Authentication Administrator
+- Helpdesk Administrator (Can reset passwords for non-admins!)
+- Password Administrator
+- Intune Administrator / Billing Administrator
+
+*NON-PRIVILEGED ROLES (SAFE TO PICK FOR "NON-PRIVILEGED" QUESTIONS):*
+- Global Reader (Read-only across everything - VERY COMMON EXAM ANSWER!)
+- Directory Readers
+- Reports Reader
+- Message Center Reader
+- Guest Inviter
+- User (Standard user with no admin roles)
+
+--------------------------------------------------------------------------------
+5. PIM FOR GROUPS (THINGS TO REMEMBER & TRAPS)
+--------------------------------------------------------------------------------
+- Purpose: Provides JIT access to Group MEMBERSHIP or Group OWNERSHIP.
+- Supported Groups: Security Groups and Microsoft 365 Groups.
+- *EXAM TRAPS*:
+  1. Dynamic Groups are NOT supported! (Membership is rule-based).
+  2. Groups synced from on-premises Active Directory (Hybrid) CANNOT be managed 
+     via PIM for Groups! (Must be Cloud-only groups).
+  3. Role-Assignable Groups ARE supported! (Best practice: Assign an Entra 
+     role permanently/actively to a Role-Assignable Group, then use PIM for 
+     Groups to make users "Eligible" for that group -> 1 activation grants 
+     multiple Entra roles + Azure RBAC roles + App access at once!).
+  4. Onboarding: You must explicitly "Enable PIM" on the group from the group's 
+     blade (Activity -> Privileged Identity Management -> Enable PIM).
+
+--------------------------------------------------------------------------------
+6. PIM FOR AZURE RESOURCES (THINGS TO REMEMBER & TRAPS)
+--------------------------------------------------------------------------------
+- Purpose: Manages Azure RBAC roles (Owner, Contributor, User Access Admin, 
+  Reader) on Management Groups, Subscriptions, Resource Groups, or Resources.
+- *EXAM TRAPS*:
+  1. Discovery Required: Azure resources do NOT appear in PIM automatically! 
+     You must go to PIM -> Azure resources -> "Discover resources" -> Select 
+     the subscription -> Click "Manage resource" to onboard it.
+  2. Who can onboard a Subscription? Only a user who already has "Owner" or 
+     "User Access Administrator" on that Azure subscription.
+  3. Custom RBAC Roles: Supported! Both Built-in and Custom Azure RBAC roles 
+     can be managed in PIM.
+  4. Classic Administrators (Co-Administrator / Service Administrator) are 
+     LEGACY and NOT managed by PIM.
+
+--------------------------------------------------------------------------------
+7. APP ROLES & CUSTOM EXTENSIONS (TRAPS)
+--------------------------------------------------------------------------------
+- App Roles + PIM:
+  - Can you directly onboard an Enterprise App into PIM? NO!
+  - *WORKAROUND TRAP*: To give JIT access to an Enterprise Application (App Role), 
+    assign a Security Group to the App Role, and then onboard THAT Security 
+    Group into "PIM for Groups"!
+- Custom Extensions (Logic Apps):
+  - Allows PIM to call an Azure Logic App during assignment or activation.
+  - *TRAP*: Requires an Azure Subscription with an Azure Logic App in the same 
+    tenant. The Logic App must be authorized via a Managed Identity or HTTP 
+    trigger configured inside PIM.
+
+--------------------------------------------------------------------------------
+8. PIM AUDITING & ALERTS (TRAPS)
+--------------------------------------------------------------------------------
+- PIM Audit History:
+  - Found inside PIM -> Manage -> Audit history (or Entra Audit Logs).
+  - Shows who assigned roles, who activated roles, approval decisions, and 
+    settings changes.
+  - *TRAP*: PIM Audit history retains data for 30 days by default (unless 
+    exported to Log Analytics / Storage Account / Event Hub via Diagnostic 
+    Settings for long-term retention!).
+- PIM Security Alerts (Built-in):
+  - PIM automatically scans for misconfigurations and triggers alerts:
+    1. "Administrators aren't using their privileged roles" (Stale active admins).
+    2. "Roles are being assigned outside of Privileged Identity Management" 
+       (Someone used the standard Entra Roles blade instead of PIM!).
+    3. "Too many global administrators" (Triggers when > 5 Global Admins exist).
+    4. "Roles don't require multi-factor authentication for activation".
+
+================================================================================
+QUICK MEMORY CHEAT SHEET (SC-300 PIM)
+================================================================================
+1. Manage PIM Entra Roles = ONLY Global Admin or Privileged Role Admin.
+2. Active Assignment = ALWAYS requires Justification at time of assignment.
+3. "Critical emails only" = True -> ONLY sends Approval requests (hides alerts).
+4. "Non-privileged role" = Pick Global Reader, Directory Reader, or Reports Reader.
+5. PIM for Groups = Cloud-only groups (NO Dynamic, NO On-Prem Synced).
+6. JIT for App Roles = Assign Group to App -> Put Group in PIM for Groups.
+7. PIM Azure Resources = Must "Discover" and "Manage" resource first.
+8. Global Admin Alert = Triggers if more than 5 Global Admins exist.
+================================================================================
