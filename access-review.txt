@@ -106,7 +106,9 @@ C. User Scope (Who is reviewed?)
 
   - *TRAP*: You can choose whether Stage 2 sees ONLY the users approved in 
 
-    Stage 1, or ALL users regardless of Stage 1 outcome.
+    Stage 1, or ALL users regardless of Stage 1 outcome. later-stage reviewers in a Microsoft 
+Entra ID multi-stage access review can see the decisions and users from previous stages, only if an administrator enables the setting.
+If a later-stage reviewer changes a decision, their new decision overwrites the result from the previous stage
 
 
 
