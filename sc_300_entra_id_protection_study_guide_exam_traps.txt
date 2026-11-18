@@ -1,0 +1,183 @@
+================================================================================
+SC-300 EXAM PREP: MICROSOFT ENTRA ID PROTECTION
+================================================================================
+
+--------------------------------------------------------------------------------
+1. LICENSING & REQUIRED ROLES (EXAM TRAPS)
+--------------------------------------------------------------------------------
+- Licensing Tiers (CRITICAL DISTINCTION):
+  * Microsoft Entra ID Free / P1:
+    - Access to "Risky users" and "Risky sign-ins" reports (Limited/Non-premium 
+      detections only, e.g., Leaked credentials, Anonymous IP).
+    - Access to the "Multifactor authentication registration policy".
+  * Microsoft Entra ID P2 (Required for full automation & Premium detections):
+    - Risk-based Conditional Access Policies (User Risk & Sign-in Risk).
+    - Premium risk detections (Atypical travel, Impossible travel, AiTM, etc.).
+    - Automated self-remediation workflows.
+
+- Least-Privilege RBAC Roles (EXAM TRAP):
+  * Read ID Protection & Conditional Access configurations:
+    - Security Reader (Least privileged for security!)
+    - Global Reader
+  * Manage ID Protection (Dismiss risk, confirm compromised, configure alerts):
+    - Security Operator (Least privileged to manage risk & dismiss alerts!)
+    - Security Administrator
+    *TRAP*: Security Operator CAN dismiss user risk and configure ID Protection 
+    notifications, but CANNOT create/modify Conditional Access policies!
+  * Create or Modify Conditional Access Policies (User/Sign-in Risk Policies):
+    - Conditional Access Administrator (Least privileged for CA!)
+    - Security Administrator
+
+--------------------------------------------------------------------------------
+2. POLICIES & CONDITIONAL ACCESS INTEGRATION
+--------------------------------------------------------------------------------
+*MAJOR ARCHITECTURE TRAP*:
+Legacy standalone User Risk and Sign-in Risk policies inside ID Protection are 
+DEPRECATED/MIGRATED. You MUST configure User Risk and Sign-in Risk policies 
+using **Conditional Access (CA)**!
+(Exception: The "Multifactor authentication registration policy" still lives 
+under ID Protection -> Protect -> Multifactor authentication registration policy).
+
+A. MULTIFACTOR AUTHENTICATION REGISTRATION POLICY
+   - Purpose: Forces users to register for Entra MFA within a 14-day window.
+   - *EXAM TRAP*: For a user to **self-remediate** risk later, they MUST 
+     already be registered for MFA *before* they become risky! If a risky user 
+     has never registered for MFA, self-remediation fails and they get blocked 
+     (requiring Admin intervention).
+   - *TRAP*: The 14-day countdown starts the first time the user signs in 
+     interactively after the policy is enabled.
+
+B. USER RISK POLICY (via Conditional Access)
+   - Evaluates the probability that the user's IDENTITY/ACCOUNT is compromised.
+   - Risk Levels: Low, Medium, High (Best Practice: Trigger on High, or Medium+).
+   - Access Controls (Grant):
+     1. Require risk remediation (Recommended: Handles passwordless & password).
+     2. Require password change (Forces secure SSPR/password change; also 
+        automatically requires MFA!).
+     3. Block access (Requires Admin to manually reset password/dismiss risk).
+     4. Require Identity Verification (Preview - Verified ID face check).
+   - *SESSION CONTROL TRAP*: When configuring "Require password change" or 
+     "Require risk remediation" in Conditional Access, the policy MUST target 
+     **"All cloud apps"** (All resources) and you CANNOT set custom session 
+     controls like Sign-in Frequency alongside password change!
+
+C. SIGN-IN RISK POLICY (via Conditional Access)
+   - Evaluates the probability that a specific SIGN-IN REQUEST is not made 
+     by the legitimate identity owner.
+   - Risk Levels: Low, Medium, High (Best Practice: Trigger on Medium and High).
+   - Access Controls (Grant):
+     1. Block access.
+     2. Allow access.
+     3. Require multifactor authentication (Passing MFA remediates the sign-in 
+        risk immediately!).
+     4. Require reauthentication (Sign-in frequency -> Every time).
+     5. Require Identity Verification (Preview).
+
+D. POLICY EXCLUSIONS & NAMED LOCATIONS (BEST PRACTICES & TRAPS)
+   - Always Exclude:
+     1. Emergency access / Break-glass accounts (Cloud-only Global Admins).
+     2. Service accounts & Service Principals (e.g., Microsoft Entra Connect 
+        Sync Account - `Sync_...`).
+   - Named Locations & Defender for Cloud Apps (MDA):
+     - Add corporate public IP ranges as **Named Locations** (marked as Trusted) 
+       in Conditional Access, AND add VPN IP ranges to Microsoft Defender for 
+       Cloud Apps.
+     - *WHY (EXAM QUESTION)*: Prevents false positives (like "Atypical travel" 
+       or "Unfamiliar sign-in properties") and improves ID Protection machine 
+       learning accuracy.
+
+--------------------------------------------------------------------------------
+3. ON-PREMISES PASSWORD CHANGE SETTING (HYBRID TRAP!)
+--------------------------------------------------------------------------------
+- Setting Location: ID Protection -> Settings -> "Allow on-premises password 
+  change to reset user risk".
+- Behavior:
+  - Disabled (Default): If a hybrid user changes/resets their password in 
+    on-premises Active Directory (and syncs via Password Hash Sync), their 
+    Entra User Risk remains HIGH!
+  - Enabled: Changing/resetting the password on-premises automatically resets 
+    the user's risk in Entra ID.
+- *EXAM TRAP*: Only works if Password Hash Synchronization (PHS) is enabled! 
+  Also, Microsoft warns to evaluate carefully before enabling because an 
+  attacker with on-prem AD access could reset the password to clear the risk.
+
+--------------------------------------------------------------------------------
+4. RISK DETECTIONS: REAL-TIME vs. OFFLINE & PREMIUM vs. NON-PREMIUM
+--------------------------------------------------------------------------------
+*EXAM STRATEGY*: Memorize the **Non-Premium** ones (available in Free/P1) and 
+the **Real-Time** vs **Offline** distinction!
+
+- Real-time vs. Offline:
+  * Real-time: Evaluated *during* the sign-in attempt (can be blocked/challenged 
+    immediately by Sign-in Risk CA policy).
+  * Offline: Evaluated *after* sign-in via background log analysis (may take 
+    minutes/hours to appear in Risk Reports).
+
+- NON-PREMIUM DETECTIONS (Available in Entra ID Free / P1):
+  1. Leaked credentials (User risk - Offline) -> Found on dark web/paste sites.
+  2. Anonymous IP address (Sign-in risk - Real-time) -> Tor browser / anonymous proxy.
+  3. Admin confirmed user compromised (Sign-in risk - Offline).
+  4. Microsoft Entra threat intelligence (User & Sign-in - Real-time/Offline).
+  5. Additional risk detected (Generic - Real-time/Offline).
+
+- KEY PREMIUM DETECTIONS (Require Entra ID P2):
+  * Real-Time Sign-in Detections:
+    - Atypical travel (`unlikelyTravel`) -> Evaluates distance/time between logins.
+    - Unfamiliar sign-in properties (`unfamiliarFeatures`).
+    - Verified threat actor IP (`nationStateIP`).
+    - Suspicious MFA authentication approval (`authenticatorPhishing`).
+  * Offline Sign-in Detections:
+    - Impossible travel (`mcasImpossibleTravel`) -> Sourced from Defender for 
+      Cloud Apps! (Note the `mcas` prefix in `riskEventType`!).
+    - Activity from anonymous IP address (`riskyIPAddress`).
+    - Malicious IP address (`maliciousIPAddress`).
+    - New country (`newCountry`).
+    - Suspicious browser (`suspiciousBrowser`).
+    - Suspicious inbox forwarding / manipulation rules (from Exchange/MDA).
+  * Real-Time or Offline (Sign-in):
+    - Password spray (`passwordSpray`).
+    - Anomalous Token (`anomalousToken`) -> Token replay/theft detection.
+  * User Risk Detections (Mostly Offline, P2):
+    - Attacker in the Middle (`attackerinTheMiddle`) -> AiTM phishing proxy!
+    - Possible attempt to access Primary Refresh Token (`attemptedPrtAccess`).
+    - Anomalous user activity (`anomalousUserActivity`).
+    - Suspicious credential addition (`suspiciousCredentialAddition` - Real-time).
+    - User reported suspicious activity (`userReportedSuspiciousActivity` - 
+      User clicked "I didn't sign in" / "Report suspicious activity" on MFA prompt).
+
+--------------------------------------------------------------------------------
+5. MONITORING, NOTIFICATIONS & RISK REPORTS
+--------------------------------------------------------------------------------
+- Built-in Email Notifications (ID Protection -> Notify):
+  1. Users at risk detected alerts:
+     - Sends email to Security Admins / Security Operators when a user reaches 
+       a specific risk level (Low, Medium, High).
+     - *TRAP*: Sends a daily digest summary (NOT instant per-event emails).
+  2. Weekly digest:
+     - Sends a weekly summary email of risky users and detections to admins.
+
+- Risk Reports (ID Protection -> Report):
+  1. Risky users: Shows current risk state (At risk, Confirmed compromised, 
+     Dismissed, Remediated) and risk level.
+     - Admin Actions: Confirm user compromised, Dismiss user risk, Reset password, 
+       Block user, Investigate with Microsoft Defender XDR.
+  2. Risky sign-ins: Shows individual sign-in events, IP, location, and risk level.
+     - Admin Actions: Confirm sign-in compromised, Confirm sign-in safe.
+  3. Risk detections: Shows the raw underlying events (`riskEventType`) that 
+     triggered the user or sign-in risk.
+  4. Risky workload identities: Tracks risk for **Service Principals / Apps** 
+     (Requires Entra Workload ID Premium license - *EXAM TRAP*!).
+
+================================================================================
+QUICK MEMORY CHEAT SHEET (SC-300 ID PROTECTION)
+================================================================================
+1. User & Sign-in Risk Policies = Configured in CONDITIONAL ACCESS (needs P2).
+2. Self-remediation prerequisite = User MUST register for MFA *before* risk occurs.
+3. User Risk Policy CA rule = MUST target "All cloud apps" (All resources).
+4. Security Operator role = Can dismiss user risk, CANNOT edit CA policies.
+5. Non-Premium detections (Free/P1) = Leaked credentials & Anonymous IP.
+6. Atypical travel = Real-time (Entra) vs. Impossible travel = Offline (MDA/`mcas`).
+7. Hybrid password reset clears risk = Must enable "Allow on-premises password 
+   change to reset user risk" + requires PHS.
+8. Risky Service Principals = Requires "Workload ID Premium" license (not P2!).
+================================================================================
