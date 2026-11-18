@@ -1,0 +1,219 @@
+================================================================================
+SC-300 EXAM PREP: HYBRID IDENTITY (ENTRA CONNECT vs. CLOUD SYNC)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. MICROSOFT ENTRA CONNECT SYNC vs. CLOUD SYNC (CRITICAL EXAM COMPARISON)
+--------------------------------------------------------------------------------
+Always compare these two architectures when reading SC-300 scenario questions:
+
+A. MICROSOFT ENTRA CONNECT SYNC (Heavyweight / On-Premises Engine)
+   - Architecture: Sync engine runs ON-PREMISES (requires Windows Server + SQL 
+     Server Express or full SQL Server).
+   - Sync Cycle: Every **30 minutes** (default).
+   - Scale: Supports > 100,000 objects (up to 150k+ with full SQL).
+   - Multi-Forest: Requires network line-of-sight between all AD forests and 
+     the single sync server.
+   - High Availability: **Active / Staging Mode** (Manual failover!).
+   - Unique Capabilities (ONLY in Entra Connect Sync):
+     * Device Sync (Microsoft Entra Hybrid Join) & Device Writeback.
+     * Pass-Through Authentication (PTA) & Federation (AD FS) configuration.
+     * Group Writeback v2 (Entra M365/Security groups back to AD).
+     * Filtering by OU, Domain, or Group (pilot).
+     * Complex custom synchronization rules (Sync Rules Editor).
+
+B. MICROSOFT ENTRA CLOUD SYNC (Lightweight / Cloud-Managed Engine)
+   - Architecture: Sync engine runs in **MICROSOFT ENTRA (CLOUD)**; lightweight 
+     **Provisioning Agent** installed on-premises (no SQL Server required!).
+   - Sync Cycle: Every **2 minutes** (much faster than Connect Sync!).
+   - Scale: Up to **150,000 objects** per domain/forest (with agent scaling).
+   - Multi-Forest: Supports **disconnected AD forests** (no trust or network 
+     connectivity needed between forests—great for Mergers & Acquisitions!).
+   - High Availability: **Active / Active** (Install up to 3 agents per domain 
+     for automatic load balancing and failover!).
+   - Scoping & Mapping:
+     * Scope by **Security Groups** or **OUs** (Organizational Units) directly 
+       in the cloud portal.
+     * Supports Directory Extensions & Custom Attribute Mapping (Cloud-managed).
+   - *MAJOR EXAM TRAPS (WHAT CLOUD SYNC CANNOT DO)*:
+     1. **NO Device Sync** (Cannot do Entra Hybrid Join via Cloud Sync alone; 
+        must run Entra Connect Sync alongside it if Hybrid Join is needed!).
+     2. **NO Device Writeback**.
+     3. **NO Pass-Through Authentication (PTA)** (Supports PHS and Seamless SSO!).
+     4. Can run **side-by-side** with Entra Connect Sync in the SAME tenant, 
+        provided they sync **non-overlapping scopes** (different OUs/domains)!
+
+--------------------------------------------------------------------------------
+2. AUTHENTICATION METHODS: PHS, PTA, FEDERATION & SEAMLESS SSO
+--------------------------------------------------------------------------------
+A. PASSWORD HASH SYNCHRONIZATION (PHS) - **MICROSOFT RECOMMENDED DEFAULT**
+   - How it works: Syncs a hash of the hash of the AD password to Entra ID. 
+     Authentication happens entirely in the cloud.
+   - *EXAM TRAPS*:
+     * Works even if on-premises AD goes completely offline!
+     * **MANDATORY** for **Entra ID Protection "Leaked Credentials"** detection! 
+       (If a question uses PTA or AD FS, you MUST enable PHS as a backup/add-on 
+       to get Leaked Credentials reports!).
+     * Required for "Allow on-premises password change to reset user risk".
+
+B. PASS-THROUGH AUTHENTICATION (PTA)
+   - How it works: User enters password in Entra -> Entra puts it in a queue -> 
+     On-prem **PTA Agent** validates password directly against on-prem AD DC.
+   - *EXAM TRAPS*:
+     * Install at least **3 PTA Agents** across different servers for HA.
+     * No inbound firewall ports needed (outbound TLS 443 only).
+     * Choose PTA in exam questions ONLY when: "Passwords/hashes must NEVER 
+       leave on-premises" OR "On-prem AD lockout/logon hours policies must be 
+       enforced immediately at sign-in" (and they don't want AD FS complexity).
+
+C. FEDERATION (AD FS / PingFederate)
+   - How it works: Entra redirects user to on-prem AD FS server to issue a SAML/
+     WS-Fed token.
+   - *EXAM TRAPS*:
+     * Choose Federation ONLY when required by legacy constraints: Smart Card / 
+       Certificate-based auth on-prem, third-party MFA on-prem, or multi-site 
+       custom claims rules not supported by Entra ID.
+     * Moving from AD FS to PHS/PTA = **Staged Rollout** (allows testing PHS/PTA 
+       with specific security groups before cutting over the whole domain!).
+
+D. MICROSOFT ENTRA SEAMLESS SINGLE SIGN-ON (SEAMLESS SSO)
+   - Purpose: Automatically signs users in on corporate domain-joined desktops 
+     inside the corporate network without typing username or password.
+   - Supported with: **PHS** and **PTA** (NOT needed with Federation).
+   - How it works: Creates a computer account `AZUREADSSOACC` in on-prem AD and 
+     uses Kerberos tickets.
+   - *CRITICAL EXAM TRAPS*:
+     * Requires adding `https://autologon.microsoftazuread-sso.com` to the browser 
+       **Intranet Zone** via Group Policy (GPO)!
+     * **Roll over the Kerberos decryption key** of `AZUREADSSOACC` at least 
+       every **30 days** (via PowerShell `Update-AzureADSSOForest`).
+     * Works on **Microsoft Entra Hybrid Joined** AND **Domain-Joined (Win7/8.1)** 
+       devices, NOT needed on pure Entra Joined devices (which use PRT).
+
+--------------------------------------------------------------------------------
+3. INSTALLATION & DEPLOYMENT BEST PRACTICES (EXPRESS vs. CUSTOM)
+--------------------------------------------------------------------------------
+A. EXPRESS SETTINGS (Entra Connect Sync)
+   - Use ONLY when: Single AD forest, < 100,000 objects, default attribute 
+     mappings, and you want **PHS + Seamless SSO** enabled automatically.
+   - *TRAP*: Express settings automatically install local SQL Server Express 
+     (10 GB database limit!).
+
+B. CUSTOM SETTINGS (Entra Connect Sync)
+   - MUST use Custom Settings when:
+     1. Multiple AD forests.
+     2. > 100,000 objects (must point to a full external **SQL Server**).
+     3. You want **PTA** or **Federation (AD FS)** instead of PHS.
+     4. You need **OU filtering**, **Group-based filtering** (pilot), or custom 
+        **Source Anchor** (default is `ms-DS-ConsistencyGuid`, fallback `objectGUID`).
+     5. Setting up a **Staging Mode** server.
+
+C. REQUIRED ROLES & ACCOUNTS (INSTALLATION TRAPS!)
+   - To install Entra Connect Sync or Cloud Sync:
+     * Entra Role: **Hybrid Identity Administrator** (Least-privileged role! 
+       Do NOT pick Global Admin if Hybrid Identity Admin is an option!).
+     * On-Prem AD Account:
+       - Express Settings requires **Enterprise Administrator** (to create the 
+         AD DS Connector account automatically).
+       - Custom Settings only requires **Domain Administrator** (if you pre-create 
+         the AD DS Connector account with proper permissions).
+   - *SYNC ACCOUNT TRAP*:
+     * Entra Connect creates a cloud service account named `Sync_<ServerName>_<Hash>` 
+       with the "Directory Synchronization Accounts" role. NEVER delete this 
+       account or assign MFA/Conditional Access policies to it!
+
+D. STAGING MODE SERVER (DISASTER RECOVERY & TESTING)
+   - A second Entra Connect server with identical configuration, but **"Staging 
+     Mode" checked**.
+   - Imports data and runs sync rules, **DOES NOT export** anything to Entra ID 
+     or AD, and **DOES NOT sync passwords**.
+   - Use cases:
+     1. High Availability / Disaster Recovery (Manual failover: disable staging 
+        mode on standby server, enable it on failed server).
+     2. Previewing changes before upgrading Entra Connect or changing sync rules.
+
+--------------------------------------------------------------------------------
+4. DEVICE SYNC, HYBRID JOIN & WRITEBACK FEATURES
+--------------------------------------------------------------------------------
+- Device Sync & Microsoft Entra Hybrid Join:
+  * Synchronizes on-prem AD computer objects to Entra ID so devices are both 
+    AD Domain-Joined AND Entra Registered/Joined.
+  * Configured in Entra Connect Sync -> **Configure device options** -> 
+    **Configure Microsoft Entra hybrid join** (creates Service Connection Point 
+    [SCP] in on-prem AD!).
+  * *SCP TRAP*: Creating the SCP in on-prem AD requires **Enterprise Admin** 
+    credentials! (Can also be deployed via GPO/registry for targeted rollout).
+
+- Password Writeback:
+  * Allows cloud password changes/resets (SSPR or Admin reset) to write back 
+    to on-prem AD in real-time.
+  * Supported by BOTH **Entra Connect Sync** AND **Entra Cloud Sync**!
+  * *TRAP*: Requires **Entra ID P1** (or P2) license + specific AD permissions 
+    (`Reset password`, `Change password`, `Write lockoutTime`, `Write pwdLastSet`) 
+    on the AD DS Connector account.
+
+- Group Writeback (v2):
+  * Writes cloud-created **Microsoft 365 Groups** or **Entra Security Groups** 
+    back to on-prem AD as Distribution, Security, or Mail-enabled Security groups.
+  * Requires Entra ID P1/P2 + Entra Connect Sync.
+
+- Device Writeback:
+  * Writes **Entra Registered (BYOD)** and **Windows Hello for Business** 
+    certificates/devices from Entra ID back to on-prem AD (`RegisteredDevices` 
+    container) so on-prem AD FS can enforce Conditional Access on BYOD devices.
+  * *TRAP*: Only needed if you use on-prem AD FS for device-based access control!
+
+- Attribute Writeback (Exchange Hybrid Writeback):
+  * Writes specific cloud attributes (like `proxyAddresses`, `msExchHideFromAddressLists`, 
+    `publicDelegates`) back to on-prem AD when managing mailboxes in Exchange Online.
+
+--------------------------------------------------------------------------------
+5. MICROSOFT ENTRA CONNECT HEALTH
+--------------------------------------------------------------------------------
+- Purpose: Cloud-based monitoring portal for hybrid identity infrastructure.
+- Monitors 3 Components:
+  1. **Microsoft Entra Connect Sync** (Installed automatically with Connect Sync).
+  2. **AD FS** (Requires manual installation of Connect Health agent on AD FS 
+     and WAP servers).
+  3. **Active Directory Domain Services (AD DS)** (Requires manual installation 
+     of Connect Health agent on Domain Controllers).
+- *EXAM TRAPS*:
+  * Requires **Microsoft Entra ID P1 or P2** license!
+  * Alerts on: Sync errors (duplicate `userPrincipalName` or `proxyAddresses`), 
+    outdated sync cycles (> 3 hours), AD FS risky IP sign-ins, and DC replication 
+    issues.
+  * Can send email alerts to administrators when sync fails.
+
+--------------------------------------------------------------------------------
+6. POST-INSTALLATION & TROUBLESHOOTING TRAPS (POWERSHELL)
+--------------------------------------------------------------------------------
+- Force a manual delta sync (Entra Connect Sync):
+  `Start-ADSyncSyncCycle -PolicyType Delta`
+- Force a full initial sync (needed after changing sync rules/scoping):
+  `Start-ADSyncSyncCycle -PolicyType Initial`
+- Duplicate Attribute Resiliency (Soft Match vs. Hard Match):
+  * **Soft Match**: Matches existing cloud user to on-prem user via `userPrincipalName` 
+    or `proxyAddresses` (SMTP).
+  * **Hard Match**: Matches via `immutableId` (Base64 encoded `objectGUID` or 
+    `ms-DS-ConsistencyGuid`).
+  * *TRAP*: If a duplicate attribute conflict occurs, Entra quarantines the 
+    conflicting attribute (`@onmicrosoft.com` fallback) until fixed on-prem!
+
+================================================================================
+QUICK MEMORY CHEAT SHEET (SC-300 HYBRID IDENTITY)
+================================================================================
+1. Least-privileged role to install Connect/Cloud Sync = **Hybrid Identity 
+   Administrator**.
+2. Cloud Sync vs. Connect Sync = Cloud Sync has **2-min sync**, **Active/Active 
+   agents**, works with **disconnected forests**, NO SQL needed, NO Device Sync, 
+   NO PTA.
+3. Leaked Credentials detection in ID Protection = **REQUIRES PHS** (even if 
+   using PTA or AD FS for auth!).
+4. Seamless SSO = Needs `https://autologon.microsoftazuread-sso.com` in Intranet 
+   Zone GPO + roll over `AZUREADSSOACC` Kerberos key every **30 days**.
+5. > 100,000 objects in Connect Sync = Must use **Custom Settings** + full **SQL 
+   Server** (Express has a 10 GB limit).
+6. Staging Mode = Imports & processes rules, **NO exports**, **NO password sync**.
+7. Connect Health = Needs **Entra ID P1/P2**; monitors Connect Sync, AD FS, AD DS.
+8. Force Sync PowerShell = `Start-ADSyncSyncCycle -PolicyType Delta` (or `Initial`).
+================================================================================
