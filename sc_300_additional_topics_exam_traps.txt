@@ -1,0 +1,205 @@
+================================================================================
+SC-300 EXAM PREP: VERIFIED ID RECOVERY, CUSTOM ATTRIBUTES, SSPR, SMART LOCKOUT,
+AGENT IDENTITIES & INTUNE
+================================================================================
+
+--------------------------------------------------------------------------------
+1. ACCOUNT RECOVERY WITH MICROSOFT ENTRA VERIFIED ID
+--------------------------------------------------------------------------------
+- Purpose: Allows locked-out users (who lost their MFA device or forgot their 
+  password) to securely recover their account WITHOUT calling the Helpdesk!
+- How it works:
+  1. User presents a **Verified ID** (e.g., government-issued ID verified by an 
+     Identity Verification Partner like AU10TIX, Onfido, Yoti, Clear) + live 
+     selfie/face check in Microsoft Authenticator.
+  2. Entra ID validates the cryptographic credential claims against the user's 
+     profile attributes and issues a Temporary Access Pass (TAP) or resets MFA/
+     password.
+- *EXAM TRAPS*:
+  * Requires **Microsoft Entra Verified ID** configured in the tenant + an 
+    approved **Identity Verification Partner (IDV)** or internal issuance.
+  * Used in **Conditional Access** ("Require Identity Verification" grant 
+    control) or **My Staff / Account Recovery workflows** to prevent social 
+    engineering attacks against the Helpdesk!
+  * Requires **Entra ID P1/P2** (Verified ID basic issuance/verification is 
+    included with Entra ID Free, but Face Check / automated risk remediation 
+    requires P2 / Verified ID add-on).
+
+--------------------------------------------------------------------------------
+2. CUSTOM SECURITY ATTRIBUTES (EXAM TRAPS!)
+--------------------------------------------------------------------------------
+- Purpose: Key-value pairs defined in Entra ID to categorize users, Enterprise 
+  Applications, or Service Principals (e.g., `Project = Alpha`, `Clearance = TopSecret`) 
+  for fine-grained filtering and **Azure ABAC** (Attribute-Based Access Control).
+- Structure:
+  * Grouped into **Attribute Sets** (max 500 attributes per tenant).
+  * Supports String, Integer, Boolean (single or multi-valued, predefined or free).
+- *CRITICAL EXAM TRAPS (RBAC & VISIBILITY)*:
+  1. **GLOBAL ADMINISTRATOR CANNOT VIEW OR MANAGE THEM BY DEFAULT!**
+     - Even a Global Admin cannot read or assign Custom Security Attributes 
+       unless explicitly assigned the dedicated RBAC roles:
+       * **Attribute Definition Administrator**: Create/manage attribute sets & 
+         definitions.
+       * **Attribute Assignment Administrator**: Assign attribute values to 
+         users/apps.
+       * **Attribute Definition Reader** / **Attribute Assignment Reader**: 
+         Read-only access.
+  2. **NOT SYNCED FROM ON-PREMISES AD**:
+     - Custom Security Attributes are **Cloud-Only**! (Do NOT confuse them with 
+       "Directory Extensions" synced via Entra Connect).
+  3. **NOT INCLUDED IN TOKENS / SAML CLAIMS**:
+     - They cannot be emitted directly as claims in JWT/SAML tokens; they are 
+       used for **Dynamic Groups**, **Conditional Access App Filters**, and 
+       **Azure Storage ABAC conditions**.
+
+--------------------------------------------------------------------------------
+3. SELF-SERVICE PASSWORD RESET (SSPR) & ADMINISTRATOR POLICY
+--------------------------------------------------------------------------------
+- Licensing & Hybrid Traps:
+  * Cloud-only password reset = Included in **Entra ID Free** (for cloud users).
+  * Hybrid password reset (writing back to on-prem AD) = Requires **Entra ID P1/P2** 
+    + **Password Writeback** enabled in Entra Connect / Cloud Sync.
+- Scoping:
+  * None, Selected (1 Security Group ONLY), or All.
+  * *TRAP*: If you choose "Selected", you can ONLY pick **ONE group** (use a 
+    nested group if you need multiple departments!).
+
+- Authentication Methods & Number of Methods Required:
+  * Standard Users (Admin configurable: **1 or 2 methods required**):
+    1. Microsoft Authenticator push notifications (or code).
+    2. Software OATH tokens (3rd-party authenticator apps).
+    3. Hardware OATH tokens (Preview - requires P1/P2).
+    4. SMS (Short Message Service).
+    5. Voice call.
+    6. Email OTP (Sent to an *alternate* email address, NOT the user's primary 
+       Entra UPN/work email!).
+    7. Security Questions (Legacy; NOT allowed for Admins!).
+  * **COMBINED REGISTRATION TRAP**:
+    - By default, **Combined Security Information Registration** is enabled: 
+      registering 1 method (like Microsoft Authenticator) registers it for 
+      BOTH MFA and SSPR simultaneously!
+
+- **ADMINISTRATOR RESET POLICY DIFFERENCES (MAJOR EXAM TRAP!)**:
+  * Accounts assigned privileged Entra/Azure administrator roles (e.g., Global 
+    Admin, User Admin, Security Admin, Billing Admin, Helpdesk Admin, Privileged 
+    Role Admin) have **HARDCODED, STRICTER SSPR RULES** that override standard 
+    tenant settings:
+    1. **ALWAYS enabled** for Admins (even if tenant SSPR is set to "None" or 
+       the Admin is not in the "Selected" group!).
+    2. **ALWAYS requires 2 authentication methods** (cannot be lowered to 1!).
+    3. **Security Questions are NEVER allowed** for Administrators.
+    4. Allowed Admin methods: Mobile app notification/code (Authenticator), 
+       Office/Mobile phone (SMS/Voice), Email OTP (alternate email), Hardware/
+       Software OATH tokens.
+
+- Require Users to Register When Signing In:
+  * Setting: SSPR -> Registration -> "Require users to register when signing in?" = Yes.
+  * "Number of days before users are asked to re-confirm their authentication 
+    information": Default = **180 days** (0 = never ask to re-confirm).
+
+--------------------------------------------------------------------------------
+4. MICROSOFT ENTRA SMART LOCKOUT (EXAM TRAPS!)
+--------------------------------------------------------------------------------
+- Purpose: Protects against brute-force / password spray attacks by distinguishing 
+  between legitimate users (familiar locations) and attackers (unfamiliar IPs), 
+  locking out attackers while letting real users sign in!
+- Default Settings (Entra ID Free):
+  * Lockout threshold: **10 failed sign-in attempts**.
+  * Lockout duration: **60 seconds** (increases progressively on repeated 
+    failed attempts).
+- *CRITICAL EXAM TRAPS*:
+  1. Customizing the threshold or duration requires **Microsoft Entra ID P1 or P2**!
+  2. **HYBRID LOCKOUT TRAP (AD DS vs. ENTRA)**:
+     - If you use **PHS** or **PTA**, Entra Smart Lockout protects the cloud, 
+       while on-prem AD has its own Account Lockout Policy.
+     - **RULE**: On-prem AD lockout threshold MUST be **GREATER** than Entra 
+       Smart Lockout threshold (e.g., Entra = 10 attempts, On-Prem AD = 20+ 
+       attempts)!
+     - *WHY?* If On-prem AD threshold is lower (e.g., 5), an attacker doing 
+       PTA/PHS brute-force will lock out the user's **on-premises AD account** 
+       before Entra Smart Lockout even triggers!
+
+--------------------------------------------------------------------------------
+5. AGENT IDENTITIES IN MICROSOFT ENTRA (AI AGENTS / WORKLOAD IDENTITIES)
+--------------------------------------------------------------------------------
+- What are Agent Identities in Entra?
+  * Specialized **Workload Identities / Service Principals** designed to 
+    represent autonomous AI agents (e.g., Microsoft Copilot Studio agents, 
+    Azure AI Foundry agents, custom MCP/AI agents) acting either **on behalf 
+    of a user (delegated)** or **autonomously (app-only)**.
+- Key Governance & Security Controls (EXAM FOCUS):
+  * **Lifecycle & Ownership**: Every Agent Identity must have a human **Sponsor / 
+    Owner** assigned so orphaned AI agents can be reviewed or deleted.
+  * **Least-Privilege Permissions**: Governed via Microsoft Graph / App Roles 
+    with short-lived tokens (Managed Identities / Federated Identity Credentials 
+    instead of static client secrets).
+  * **Conditional Access for Workload / Agent Identities**:
+    - Requires **Microsoft Entra Workload ID Premium** license!
+    - Can block Agent Identities from signing in from untrusted IPs/Named 
+      Locations or when **Service Principal Risk** (ID Protection) is High!
+  * **Global Secure Access MCP Policy**:
+    - Controls network-level Model Context Protocol (MCP) connections made by 
+      AI agents.
+
+--------------------------------------------------------------------------------
+6. INTUNE & ENTRA ID INTEGRATION (SC-300 EXAM INTERSECTION)
+--------------------------------------------------------------------------------
+SC-300 does NOT test deep Intune device configuration, ONLY how Intune device 
+state integrates with **Entra ID** and **Conditional Access**:
+
+1. **Entra Join vs. Entra Hybrid Join vs. Entra Registered**:
+   - **Entra Registered (BYOD)**: Personal devices; user signs in with local/
+     personal account and adds Work/School account.
+   - **Entra Joined**: Cloud-native corporate devices; user signs in directly 
+     with Entra ID credentials (`user@domain.com`).
+   - **Entra Hybrid Joined**: Joined to on-prem AD AND registered in Entra ID 
+     (via Entra Connect Device Sync + SCP).
+
+2. **Device Compliance in Conditional Access (CRITICAL TRAP!)**:
+   - Conditional Access Grant Control: **"Require device to be marked as compliant"**.
+   - *TRAP*: Entra ID does NOT evaluate device compliance by itself! The device 
+     MUST be enrolled in **Microsoft Intune** (or a 3rd-party MDM integrated 
+     with Intune), and Intune passes the `IsCompliant = True` attribute to Entra ID!
+   - Compare with **"Require Microsoft Entra hybrid joined device"**: Does NOT 
+     require Intune; relies purely on Entra Connect syncing the AD computer object.
+
+3. **Device Filters in Conditional Access**:
+   - Uses dynamic rule syntax (e.g., `device.isCompliant -eq True` or 
+     `device.trustType -eq "AzureAD"` or `device.extensionAttribute1`) to 
+     include/exclude specific devices in a CA policy.
+
+4. **Windows Hello for Business (WHfB) & Passwordless**:
+   - Configured via Intune (or GPO) + Entra ID.
+   - Uses asymmetric key pair / certificate tied to the device's **TPM chip** + 
+     biometric/PIN (satisfies **MFA** in a single step!).
+   - *TRAP*: To access on-premises file shares/printers using WHfB on an Entra 
+     Joined or Hybrid Joined device, configure **Cloud Kerberos Trust** (the 
+     modern, simplest method in Entra ID—replaces complex PKI/Key Trust!).
+
+5. **Entra Device Settings (Entra ID -> Devices -> Device settings)**:
+   - "Users may join devices to Microsoft Entra": All / Selected / None.
+   - "Maximum number of devices per user": Default = **50**.
+   - "Require Multifactor Authentication to register or join devices with 
+     Microsoft Entra": Best practice = Yes (if not already enforced by CA).
+   - **Microsoft Entra Local Administrator Role**:
+     * Automatically grants local admin rights on ALL **Entra Joined** Windows 
+       devices (alongside Global Admins).
+     * *TRAP*: Does NOT apply to Entra Hybrid Joined or Entra Registered devices!
+
+================================================================================
+QUICK MEMORY CHEAT SHEET (SC-300 ADDITIONAL TOPICS)
+================================================================================
+1. Custom Security Attributes = Even **Global Admin** CANNOT read/assign them 
+   without **Attribute Definition/Assignment Administrator** role! Cloud-only!
+2. SSPR for Admins = **ALWAYS enabled**, **ALWAYS requires 2 methods**, and 
+   **Security Questions are NEVER allowed**.
+3. SSPR Selected Scope = Can only pick **1 group** (use nested groups if needed).
+4. Smart Lockout Hybrid Trap = On-prem AD lockout threshold MUST be **higher** 
+   than Entra Smart Lockout threshold (e.g., AD = 20, Entra = 10).
+5. CA "Require compliant device" = Requires **Intune** enrollment.
+6. WHfB On-Prem Access = **Cloud Kerberos Trust** (simplest, no on-prem PKI).
+7. Entra Joined Local Admin Role = Works ONLY on **Entra Joined** devices (NOT 
+   Hybrid Joined!).
+8. Agent Identities = Require **Workload ID Premium** for Conditional Access & 
+   Risk policies.
+================================================================================
