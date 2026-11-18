@@ -1,0 +1,226 @@
+================================================================================
+SC-300 EXAM PREP: MICROSOFT ENTRA GLOBAL SECURE ACCESS (SSE)
+================================================================================
+
+--------------------------------------------------------------------------------
+1. CORE ARCHITECTURE, ROLES & LICENSING (EXAM TRAPS)
+--------------------------------------------------------------------------------
+- What is Global Secure Access (GSA)?
+  Microsoft's Security Service Edge (SSE) solution, composed of:
+  1. Microsoft Entra Internet Access (Secure Web Gateway - SWG for SaaS/Web).
+  2. Microsoft Entra Private Access (Zero Trust Network Access - ZTNA, replaces 
+     legacy VPNs; builds on Entra App Proxy infrastructure).
+  3. Microsoft Traffic Profile (Optimizes & secures M365/Entra traffic).
+
+- Required Role (EXAM TRAP!):
+  * Global Secure Access Administrator (Least-privileged role to manage GSA!).
+  * Global Administrator (Can also manage, plus required for initial tenant 
+    onboarding/activation in some scenarios).
+  * Security Reader / Global Reader (Read-only visibility).
+
+- Licensing Traps:
+  * Microsoft Traffic Profile: Included with Entra ID P1 / P2!
+  * Entra Internet Access & Entra Private Access: Require standalone add-on 
+    licenses OR Microsoft Entra Suite!
+
+--------------------------------------------------------------------------------
+2. TRAFFIC FORWARDING PROFILES (THE 3 PROFILES & TRAPS)
+--------------------------------------------------------------------------------
+You MUST enable Traffic Forwarding Profiles in the Entra portal to route traffic 
+through the GSA cloud edge:
+
+1. Microsoft Traffic Profile:
+   - Routes Microsoft 365 (Exchange, SharePoint, Teams) and Entra ID traffic.
+   - Enables "Token Protection / Compliant Network Check" & "Universal Tenant 
+     Restrictions" without decrypting M365 traffic.
+   - *TRAP*: Only TCP traffic is supported for M365 forwarding (UDP/QUIC falls 
+     back to direct internet).
+
+2. Private Access Profile:
+   - Routes internal corporate traffic (on-prem/private cloud IPs, FQDNs, 
+     Active Directory domain controllers) through Private Network Connectors.
+   - *EXAM TRAP*: Includes a special built-in app called **"Quick Access"** 
+     (for broad IP/FQDN ranges) vs. **Per-App Access** (Enterprise Apps).
+
+3. Internet Access Profile:
+   - Applies to: **All internet traffic, EXCEPT traffic handled by the 
+     Microsoft traffic profile** (Microsoft traffic takes precedence!).
+   - Settings & Links inside the Profile:
+     * Internet access policies (Security profiles linked here).
+     * Linked Conditional Access policies (Enforces CA on internet traffic!).
+     * User and group assignments (Scope who gets the profile).
+     * Remote network assignments (Applies policies to branch offices via CPE).
+   - *EXPLICIT FORWARD PROXY TRAP*:
+     Used for legacy devices/OS or servers that CANNOT install the GSA Client! 
+     Supports PAC files / browser proxy settings (port 8080/8443) for HTTP/HTTPS 
+     web traffic only (does NOT support Private Access or non-web protocols).
+
+--------------------------------------------------------------------------------
+3. APPLICATIONS & PRIVATE NETWORKS (ZTNA / PRIVATE ACCESS)
+--------------------------------------------------------------------------------
+- Private Network Connectors & Connector Groups:
+  * Lightweight agents installed on Windows Server (Windows Server 2012 R2+) 
+    inside your private network (outbound-only TLS 443 to Azure; NO inbound 
+    firewall ports needed!).
+  * *TRAP*: Uses the SAME underlying connector architecture as Microsoft Entra 
+    Application Proxy, but MUST be assigned to a Connector Group dedicated to 
+    Private Access.
+  * Private Access Sensors: Monitoring components that measure latency and 
+    connectivity health between connectors and internal targets.
+
+- Connector Routing Method (EXAM TRAP!):
+  * **High availability (Default)**: Round-robin load balancing across connectors 
+    in the group.
+  * **Performance (Lowest latency)**: Routes traffic through the connector with 
+    the lowest latency to the target resource.
+
+- Application Configuration (Enterprise Applications -> Global Secure Access):
+  * Enable device access with Global Secure Access: Checkbox required to 
+    publish an internal app via GSA Private Access.
+  * Application Segments: Define the exact **IP address, IP range (CIDR), or 
+    FQDN + Ports + Protocol (TCP/UDP)** for the internal app.
+    *TRAP*: Unlike legacy App Proxy (which only did HTTP/HTTPS), GSA Private 
+    Access supports **ANY TCP and UDP port** (SMB, RDP, SSH, LDAP, Kerberos!).
+  * Private DNS: Enables internal name resolution (e.g., `intranet.corp.local`) 
+    over the GSA tunnel without exposing internal DNS servers to the internet.
+  * Service Principal Name (SPN) / Kerberos SSO:
+    *TRAP*: Enables seamless Single Sign-On (Kerberos Constrained Delegation) 
+    to legacy on-prem apps using internal Active Directory, even when the 
+    client is completely remote!
+
+--------------------------------------------------------------------------------
+4. DEVICE & CLIENT REQUIREMENTS (MEMORIZE THESE EXAM TRAPS!)
+--------------------------------------------------------------------------------
+The Global Secure Access Client intercepts traffic at the OS network stack level:
+
+1. Windows:
+   - OS: Windows 10 or Windows 11 (64-bit; ARM64 supported on Win11).
+   - Join State (CRITICAL TRAP!): MUST be **Microsoft Entra joined** OR 
+     **Microsoft Entra hybrid joined**!
+     *TRAP*: **Microsoft Entra REGISTERED (BYOD)** Windows devices are NOT 
+     supported for the Windows GSA client!
+   - Permissions: **Local administrator permissions** are required to install 
+     (and to pause/disable the client if the admin allows users to pause it).
+
+2. macOS:
+   - OS: macOS version 14 (Sonoma) or newer.
+   - Join State: Device registered to Microsoft Entra with **Company Portal** 
+     app installed AND **Microsoft Enterprise SSO plug-in** configured!
+
+3. Android:
+   - OS: Android 11.0 and above (Mobile phone or tablet).
+   - *TRAP*: **Android Go** is NOT supported!
+   - Deployment: Deployed via Microsoft Defender for Endpoint app (the GSA 
+     client tunnel is built into the Defender app on iOS/Android!).
+
+4. iOS / iPadOS:
+   - OS: iOS 16.0 and above (iPhones and iPads supported).
+   - Deployment: Also delivered through the **Microsoft Defender** mobile app!
+
+--------------------------------------------------------------------------------
+5. REMOTE NETWORKS (BRANCH OFFICE CONNECTIVITY)
+--------------------------------------------------------------------------------
+- Purpose: Connects branch offices/sites directly to GSA without needing the 
+  GSA client on every endpoint (ideal for IoT, printers, or branch-wide routing).
+- Configuration:
+  * Define Remote Network Name, Region (closest Azure POP), and Bandwidth 
+    capacity (e.g., 250 Mbps, 500 Mbps, 1 Gbps).
+  * Add one or more **CPE (Customer Premises Equipment)** links (e.g., SD-WAN, 
+    Cisco, Palo Alto, Fortinet router) using an **IPsec (IKEv2) VPN tunnel** 
+    with BGP (Border Gateway Protocol).
+  * *TRAP*: Remote networks can be assigned to the **Microsoft Traffic Profile** 
+    and **Internet Access Profile** (NOT Private Access—branch-to-branch 
+    routing is not supported via GSA Remote Networks).
+
+--------------------------------------------------------------------------------
+6. SECURITY PROFILES & INTERNET ACCESS POLICIES
+--------------------------------------------------------------------------------
+- Security Profiles:
+  * Container that groups multiple filtering policies together (e.g., Web 
+    Content Filtering + TLS Inspection + Threat Intelligence).
+  * Assigned to users/groups via **Conditional Access** (Session Control -> 
+    "Use Global Secure Access security profile") OR as a **Baseline Profile** 
+    (applies to all users with lowest priority).
+  * *PRIORITY TRAP*: Lower number = Higher priority (e.g., Priority 100 beats 
+    Priority 200; Baseline profile is always evaluated LAST).
+
+- Policy Types inside Internet Access:
+  1. Web Content Filtering Policy: Blocks/allows traffic based on **FQDN**, 
+     **URL**, or **Web Categories** (e.g., Gambling, Social Networking, Malware).
+  2. Cloud Firewall Policies: Layer 3/4/7 network filtering based on Source/Dest 
+     IP, Port, Protocol, and FQDN.
+  3. TLS Inspection Policy: Decrypts HTTPS traffic (TLS termination) at the 
+     GSA edge so deep inspection policies (Content, Prompt, Threat Intel) can 
+     inspect encrypted payloads.
+     *TRAP*: Requires pushing a trusted Root/Intermediate CA certificate to 
+     client devices! Must bypass sensitive categories (Banking, Healthcare).
+  4. Threat Intelligence Policy: Automatically blocks traffic to/from known 
+     malicious IPs and domains using Microsoft Threat Intelligence.
+  5. Prompt Policy & Content Policy (AI / Data Security):
+     - Inspects and blocks sensitive data or risky prompts sent to Generative AI 
+       apps (e.g., ChatGPT, Copilot) when TLS inspection is active.
+  6. MCP Policy (Model Context Protocol Policy):
+     - Controls and governs AI agent / Model Context Protocol tool connections 
+       and traffic over the network.
+
+--------------------------------------------------------------------------------
+7. SESSION MANAGEMENT, TENANT RESTRICTIONS & ADAPTIVE ACCESS
+--------------------------------------------------------------------------------
+- Adaptive Access (Conditional Access Integration):
+  * Evaluates CA policies in real-time on **network traffic acquisition**!
+  * Can enforce MFA, Compliant Device, or Sign-in Risk checks BEFORE allowing 
+    access to specific websites or internal Private Access apps.
+- Universal Tenant Restrictions (v2):
+  * Prevents data exfiltration where users sign into an unauthorized external 
+    M365 tenant (e.g., personal/competitor tenant) from a corporate device.
+  * *HOW IT WORKS (EXAM TRAP)*: GSA injects a `sec-Restrict-Tenant-Access-Policy` 
+    header at the network edge for ALL M365 traffic, regardless of browser or 
+    native desktop app!
+- Session Management (Token Protection / Compliant Network Check):
+  * Prevents **Token Replay Attacks**! Conditional Access checks if the 
+    traffic originates from a **Compliant Network** (i.e., routed through the 
+    authenticated GSA tunnel). If an attacker steals a token and uses it from 
+    an external IP outside GSA, Conditional Access immediately blocks it!
+- Custom Block Page:
+  * Customizes the HTML/text message shown to users when blocked by Web 
+    Content Filtering or Threat Intelligence policies.
+
+--------------------------------------------------------------------------------
+8. MONITORING & LOGS (EXAM TRAPS)
+--------------------------------------------------------------------------------
+- Traffic Logs: Detailed logs of every network flow (Source IP, Dest FQDN/IP, 
+  Action: Allow/Block, Policy matched, Transaction ID).
+- Enriched Microsoft 365 Logs:
+  * *TRAP*: Bridges the network gap! Adds the **Original Client IP**, Device ID, 
+    and Process Name into SharePoint/Exchange logs (instead of showing Microsoft 
+    proxy IPs).
+- Gen AI Insight Logs: Tracks shadow AI usage, prompts, and blocked AI activity.
+- Client Insights & Deployment Logs:
+  * Client Insights: Shows active GSA client versions, OS distribution, and 
+    connection health.
+  * Deployment Logs: Tracks installation, enrollment, and client configuration 
+    errors.
+- Remote Network Health Logs: Tracks IPsec tunnel status, BGP peering, and 
+  bandwidth utilization for branch CPE links.
+- Alerts & Workbooks:
+  * Alerts: Notifies admins of connector outages, tunnel drops, or policy blocks.
+  * Workbooks: Azure Monitor visualizations (requires diagnostic settings 
+    exported to a Log Analytics Workspace).
+
+================================================================================
+QUICK MEMORY CHEAT SHEET (SC-300 GLOBAL SECURE ACCESS)
+================================================================================
+1. Admin Role = "Global Secure Access Administrator" (least privilege).
+2. Windows Client Join State = Entra Joined or Hybrid Joined ONLY (NO Entra 
+   Registered / BYOD!).
+3. iOS & Android Client = Delivered inside the **Microsoft Defender** mobile app!
+   (Android Go is NOT supported).
+4. Private Access = Supports ANY TCP/UDP port (RDP, SSH, SMB, Kerberos), unlike 
+   legacy App Proxy (HTTP/HTTPS only).
+5. Microsoft Traffic Profile takes precedence over Internet Access Profile.
+6. Compliant Network Check in CA = Blocks stolen tokens replayed outside GSA!
+7. Universal Tenant Restrictions = Injects headers at the network edge for all 
+   apps/browsers (prevents signing into external/personal M365 tenants).
+8. Remote Networks = IPsec + BGP from branch CPE; supports Microsoft & Internet 
+   profiles ONLY (NO Private Access).
+================================================================================
