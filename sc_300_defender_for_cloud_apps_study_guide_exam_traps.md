@@ -1,6 +1,6 @@
-================================================================================
+
 SC-300 EXAM PREP: MICROSOFT DEFENDER FOR CLOUD APPS (MDA / CASB)
-================================================================================
+
 
 --------------------------------------------------------------------------------
 1. CORE ARCHITECTURE, ROLES & LICENSING (EXAM TRAPS)
@@ -166,9 +166,9 @@ Both require routing through Conditional Access App Control first:
     suddenly downloading massive data via Microsoft Graph API), enable **App 
     Governance** inside MDA settings!
 
-================================================================================
+
 QUICK MEMORY CHEAT SHEET (SC-300 DEFENDER FOR CLOUD APPS)
-================================================================================
+
 1. Easiest & best Cloud Discovery method = **Microsoft Defender for Endpoint 
    (MDE) integration** (captures off-network devices + user identity).
 2. Blocking an "Unsanctioned" app = Tagging it is NOT enough! Must enable 
