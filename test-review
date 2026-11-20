@@ -16,11 +16,13 @@ PIM : You can review all the role assignments and activations that occurred duri
 
 To track a provisioned user, you can use the information captured in Microsoft Entra provisioning logs to help find a solution. - AADProvisioningLogs
 
-A Microsoft Entra ID P1 or P2 license at least the Microsoft Entra Report Reader role are prerequisites to getting access to a Microsoft Entra workbook (existing set up of Azure Monitor, and you want to add Microsoft Entra log data).
+A Microsoft Entra ID P1 or P2 license at least the Microsoft Entra Report Reader role are prerequisites to getting access to a Microsoft Entra workbook (existing set up of Azure Monitor, and you want to add Microsoft
+Entra log data).
 
 Dynamic user and dynamic device are the only two membership types that allow the use of dynamic membership rules to automatically add and remove members.
 
-Dynamic membership for user or device groups is supported in the Microsoft Entra admin center and the Microsoft Intune admin center. The Microsoft 365 admin center can create groups but does not support dynamic membership rules.
+Dynamic membership for user or device groups is supported in the Microsoft Entra admin center and the Microsoft Intune admin center. The Microsoft 365 admin center can create groups but does not support dynamic membership 
+rules.
 
 To allow the Contoso users to connect to your tenant, but restrict other external users, you must set the default settings to block all inbound and outbound access, and then set the specific organizational settings to override the default settings to block all inbound and outbound access.
 Conditional Access policies can be triggered by users with specific device operating systems, users attempting to access specific applications, and by specific IP location information.
@@ -33,18 +35,21 @@ In Microsoft Defender for Cloud Apps, the four risk categories used to score clo
 
 Microsoft Defender for Cloud Apps. get data onto the Cloud Discovery dashboard -> snapshot report
 
-The lockout duration, reset account lockout, lockout threshold, and account lockout threshold must be properly configured if pass-through is used to prevents on-premises Active Directory accounts from being locked out by brute force attacks on Microsoft Entra accounts.
+The lockout duration, reset account lockout, lockout threshold, and account lockout threshold must be properly configured if pass-through is used to prevents on-premises Active Directory accounts from being locked out by
+brute force attacks on Microsoft Entra accounts.
 
 The rest of the options are valid, but they cannot be modified, nor do they relate to smart lockout.
 
 high affinity certificate X509SKI
 
-When Conditional Access policy or group membership changes must be applied to certain users immediately, you have two options. You can run the Revoke-MgUserSign cmdlet, or you can select Revoke Session on the user profile page.
+When Conditional Access policy or group membership changes must be applied to certain users immediately, you have two options. You can run the Revoke-MgUserSign cmdlet, or you can select Revoke Session on the user profile
+page.
 
 User risk-based Conditional Access policy : Require password change ,Require risk remediation ,block access
 Sign-in risk-based Conditional Access policy: require mfa, require re-authentication, block access
 
-The Global Secure Access client supports Windows 10/11 devices that are Microsoft Entra joined or hybrid joined, and macOS devices registered to Entra ID via Company Portal. Windows devices that are only Entra registered are not supported. Therefore, the client can be installed on Device1 and Device3.
+The Global Secure Access client supports Windows 10/11 devices that are Microsoft Entra joined or hybrid joined, and macOS devices registered to Entra ID via Company Portal. Windows devices that are only Entra registered 
+are not supported. Therefore, the client can be installed on Device1 and Device3.
 
 To enable Microsoft Entra Private Access, you must deploy one or more private network connectors on Windows Server machines within the on-premises network. These connectors establish a secure channel to Microsoft’s Global Secure Access service, allowing authorized users to reach on-premises applications without a VPN. The Global Secure Access client is for user devices, not servers. The Microsoft Entra provisioning agent is unrelated to Private Access, and the Windows Remote Access role is the legacy VPN approach being replaced.
 
@@ -60,9 +65,12 @@ Enabling the Lifecycle of external users setting in entitlement management ensur
 
 Access review activities are recorded and available in the Microsoft Entra audit logs. You can filter the audit data by category, activity type, and date range.
 
-An administrator confirming that a user is compromised indicates that an administrator selected Confirm user compromised in the Risky users report or used the riskyUsers API. It is included as a nonpremium sign-in risk detection type, which are included with Microsoft Entra ID P1 licenses. Leaked credentials and a suspicious API Traffic are both considered user risk detection types. Unknown devices are NOT considered as sign-in risks. Which risk is classified as a sign-in risk? -> an administrator confirming that a user is compromised
+An administrator confirming that a user is compromised indicates that an administrator selected Confirm user compromised in the Risky users report or used the riskyUsers API. It is included as a nonpremium sign-in risk
+detection type, which are included with Microsoft Entra ID P1 licenses. Leaked credentials and a suspicious API Traffic are both considered user risk detection types. Unknown devices are NOT considered as sign-in risks.
+Which risk is classified as a sign-in risk? -> an administrator confirming that a user is compromised
 
-The Global Secure Access client supports Windows 10/11 (Entra joined or hybrid joined), macOS (via Company Portal), and Android (via Microsoft Tunnel for MAM integration). Linux devices are not supported. Therefore, the correct set of devices is Windows 11, macOS, and Android.
+The Global Secure Access client supports Windows 10/11 (Entra joined or hybrid joined), macOS (via Company Portal), and Android (via Microsoft Tunnel for MAM integration). Linux devices are not supported. 
+Therefore, the correct set of devices is Windows 11, macOS, and Android.
 
 --
 You need to investigate a sign-in that occurred 45 days ago and identify which risk detections caused it to be flagged.
