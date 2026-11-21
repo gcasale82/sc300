@@ -12,31 +12,31 @@ ensure that users can connect to Exchange Online only through email clients that
 
 Enable app governance in the Microsoft Defender portal under Settings > Cloud apps > App governance > Service status. Microsoft 365 Defender is the former name associated with the unified Defender XDR experience. App governance is now included with Defender for Cloud Apps and no longer requires a separate add-on license
 
-https://learn.microsoft.com/en-us/entra/identity/authentication/howto-mfa-userstates?utm_source=openai
+https://learn.microsoft.com/en-us/entra/identity/authentication/howto-mfa-userstates?utm_source-openai
 
-=======
+---
 Cosa cambia tra Utente e Device per gli Stati MFA?Stato MFA dell'Utente (User States):
 Rappresenta lo stato di registrazione e abilitazione dell'utente all'interno della directory. Storicamente (nel contesto della gestione classica), un utente poteva trovarsi in tre stati distinti:Disabilitato (Disabled): L'utente non è richiesto di usare l'MFA (spesso lo stato di default per i nuovi utenti non migrati ai Criteri di Accesso Condizionale).Abilitato (Enabled): L'utente è stato contrassegnato per richiedere l'MFA, ma non l'ha ancora registrata (la prima volta che effettua l'accesso, gli viene chiesto di completare la registrazione).Impostato (Enforced): L'utente ha completato la registrazione e deve obbligatoriamente fornire l'MFA a ogni accesso richiesto.(Nota: Oggi Microsoft consiglia vivamente di gestire l'MFA tramite i Criteri di Accesso Condizionale - Conditional Access - piuttosto che affidarsi unicamente a questi stati legacy per utente).Stato basato sul Dispositivo (Device States):
 Non riguarda la configurazione dell'utente in quanto tale, ma lo stato di registrazione del dispositivo (es. Registered, Joined, o Hybrid Joined) e la sua conformità. Attraverso i controlli di sessione e i criteri di accesso condizionale, il sistema valuta se il dispositivo dal quale si accede è gestito e sicuro (es. protetto da Intune) o se è un dispositivo non gestito (unmanaged).2. Cosa fa l'impostazione "Allow users to remember MFA on devices they trust for X days"?L'impostazione "Ricorda MFA sui dispositivi attendibili per X giorni" (configurabile nelle impostazioni di sicurezza multifattore) agisce come un'eccezione temporanea basata sul browser e sul dispositivo utilizzato:Come funziona: Quando un utente esegue l'accesso superando con successo la sfida MFA (ad esempio inserendo il codice OTP o approvando la notifica sull'app Microsoft Authenticator) e spunta la casella “Non chiedere più per X giorni”, Microsoft Entra ID memorizza questo consenso tramite un cookie o un token sicuro sul browser/dispositivo specifico.Cosa cambia nella pratica:Per i successivi $X$ giorni (fino a un massimo configurabile), l'utente non dovrà ripetere la verifica MFA sullo stesso dispositivo e browser, velocizzando l'accesso.Se il cookie scade, viene cancellato, oppure se l'utente tenta di accedere da un nuovo dispositivo o da una finestra di navigazione in incognito, la richiesta di MFA tornerà a essere obbligatoria.Differenza chiave: Mentre lo stato dell'utente definisce se l'account è soggetto all'obbligo di MFA in linea di principio, la funzione "Ricorda MFA" sposta l'attenzione sull'affidabilità temporanea del contesto (il dispositivo/browser), riducendo l'affaticamento da autenticazione (prompt fatigue) per gli utenti che utilizzano postazioni di lavoro fideussate.
-=======
+---
 User1 can activate the eligible Application administrator role through Privileged Identity Management under My roles in the Microsoft Entra admin center
-=====
+-----
 You need to automatically block users when they report an MFA request that they did not initiate. -> Report suspicious activity, marks reporting users as high risk; automatic blocking requires a suitable risk-based Conditional Access policy or custom automation
-===
+---
 sspr authentication methods:
 Mobile app notification
 Mobile app code
 Email
 Mobile phone
-==
+--
 track application access assignments using Identity Governance -> create catalog
-==
+--
 Enterprise Applications (Consent Settings) -> autorizzare le applicazioni terze ad accedere ai permessi del tenant
-==
-https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-integrate-activity-logs-with-azure-monitor-logs?utm_source=openai
-==
+--
+https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-integrate-activity-logs-with-azure-monitor-logs?utm_source-openai
+--
 Enterprise application roles can be assigned to security groups. Group1 is a security group, and Group4 is a mail-enabled security group
-==
+--
 App Owners only User ; Enterprise app assignment : Users and security or mail-enabled security groups.
 Microsoft Entra Access Reviews automatically flatten nested groups - User1 is an owner assigned as a reviewer and is also a user member in scope. A fallback reviewer is needed when the group has no owner, not merely because an owner is also a member.
 In Microsoft Entra ID, an owner who is assigned as a reviewer can review their own access, unless self-review is explicitly disabled in the review settings. The lack of a Fallback reviewer doesn't block this because the group does have valid owners
@@ -301,7 +301,7 @@ need to synchronize the ADatum users
 -> from entra connect wizard , customize synchronzation options
 explanation : users created in the new Adatum OU are not synced until that OU is added to the filter. Rerunning the wizard and choosing Customize synchronization options lets you change domain and OU filtering and select the Adatum OU
 --
-Microsoft Entra role can be assigned only to a group created as role-assignable (isAssignableToRole = true)
+Microsoft Entra role can be assigned only to a group created as role-assignable (isAssignableToRole - true)
 Privileged Authentication Administrator or a Global Administrator can change the credentials of, or reset the password for, members and owners of a role-assignable group
 Administrator assignment is Eligible. Signing in doesn't activate it: Admin must activate the role in PIM
 --
@@ -399,7 +399,7 @@ configure an alert that triggers when an app requires high permissions and has b
 cross-tenant synchronization , usi attribute mappings and not group sync -> only User1 (it will sync groups only when group synchronization is enabled)
 ---
 case study
-User3 = User administrator
+User3 - User administrator
 requirements
 Configure self-service password reset (SSPR).
 Configure multi-factor authentication (MFA) for all users.
