@@ -14,35 +14,48 @@ Enable app governance in the Microsoft Defender portal under Settings > Cloud ap
 
 https://learn.microsoft.com/en-us/entra/identity/authentication/howto-mfa-userstates?utm_source-openai
 
----
 Cosa cambia tra Utente e Device per gli Stati MFA?Stato MFA dell'Utente (User States):
 Rappresenta lo stato di registrazione e abilitazione dell'utente all'interno della directory. Storicamente (nel contesto della gestione classica), un utente poteva trovarsi in tre stati distinti:Disabilitato (Disabled): L'utente non è richiesto di usare l'MFA (spesso lo stato di default per i nuovi utenti non migrati ai Criteri di Accesso Condizionale).Abilitato (Enabled): L'utente è stato contrassegnato per richiedere l'MFA, ma non l'ha ancora registrata (la prima volta che effettua l'accesso, gli viene chiesto di completare la registrazione).Impostato (Enforced): L'utente ha completato la registrazione e deve obbligatoriamente fornire l'MFA a ogni accesso richiesto.(Nota: Oggi Microsoft consiglia vivamente di gestire l'MFA tramite i Criteri di Accesso Condizionale - Conditional Access - piuttosto che affidarsi unicamente a questi stati legacy per utente).Stato basato sul Dispositivo (Device States):
 Non riguarda la configurazione dell'utente in quanto tale, ma lo stato di registrazione del dispositivo (es. Registered, Joined, o Hybrid Joined) e la sua conformità. Attraverso i controlli di sessione e i criteri di accesso condizionale, il sistema valuta se il dispositivo dal quale si accede è gestito e sicuro (es. protetto da Intune) o se è un dispositivo non gestito (unmanaged).2. Cosa fa l'impostazione "Allow users to remember MFA on devices they trust for X days"?L'impostazione "Ricorda MFA sui dispositivi attendibili per X giorni" (configurabile nelle impostazioni di sicurezza multifattore) agisce come un'eccezione temporanea basata sul browser e sul dispositivo utilizzato:Come funziona: Quando un utente esegue l'accesso superando con successo la sfida MFA (ad esempio inserendo il codice OTP o approvando la notifica sull'app Microsoft Authenticator) e spunta la casella “Non chiedere più per X giorni”, Microsoft Entra ID memorizza questo consenso tramite un cookie o un token sicuro sul browser/dispositivo specifico.Cosa cambia nella pratica:Per i successivi $X$ giorni (fino a un massimo configurabile), l'utente non dovrà ripetere la verifica MFA sullo stesso dispositivo e browser, velocizzando l'accesso.Se il cookie scade, viene cancellato, oppure se l'utente tenta di accedere da un nuovo dispositivo o da una finestra di navigazione in incognito, la richiesta di MFA tornerà a essere obbligatoria.Differenza chiave: Mentre lo stato dell'utente definisce se l'account è soggetto all'obbligo di MFA in linea di principio, la funzione "Ricorda MFA" sposta l'attenzione sull'affidabilità temporanea del contesto (il dispositivo/browser), riducendo l'affaticamento da autenticazione (prompt fatigue) per gli utenti che utilizzano postazioni di lavoro fideussate.
+
 ---
+
 User1 can activate the eligible Application administrator role through Privileged Identity Management under My roles in the Microsoft Entra admin center
+
 -----
+
 You need to automatically block users when they report an MFA request that they did not initiate. -> Report suspicious activity, marks reporting users as high risk; automatic blocking requires a suitable risk-based Conditional Access policy or custom automation
+
 ---
+
 sspr authentication methods:
 Mobile app notification
 Mobile app code
 Email
 Mobile phone
+
 --
 track application access assignments using Identity Governance -> create catalog
+
 --
 Enterprise Applications (Consent Settings) -> autorizzare le applicazioni terze ad accedere ai permessi del tenant
+
 --
 https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-integrate-activity-logs-with-azure-monitor-logs?utm_source-openai
+
 --
 Enterprise application roles can be assigned to security groups. Group1 is a security group, and Group4 is a mail-enabled security group
+
 --
+
 App Owners only User ; Enterprise app assignment : Users and security or mail-enabled security groups.
 Microsoft Entra Access Reviews automatically flatten nested groups - User1 is an owner assigned as a reviewer and is also a user member in scope. A fallback reviewer is needed when the group has no owner, not merely because an owner is also a member.
 In Microsoft Entra ID, an owner who is assigned as a reviewer can review their own access, unless self-review is explicitly disabled in the review settings. The lack of a Fallback reviewer doesn't block this because the group does have valid owners
+
 ---
 Microsoft Entra ID Protection signals have a maximum retention of 90 days: risky sign-ins are kept 7 days on Free, 30 days on P1 and 90 days on P2
 Global Administrator does not automatically have permissions for custom security attributes
+
 --
 Microsoft Entra ID - Custom Security Attributes Roles Summary
 
@@ -70,25 +83,33 @@ Microsoft separates these roles to enforce a strict separation of duties and a l
 
 --
 apps support automatic provisioning of Microsoft Entra users -> SCIM2.0
+
 --
 The Conditional Access What If tool simulates a sign-in with specified conditions and reports which Conditional Access policies apply
+
 --
+
 grant users in the Contoso East division access to Microsoft SharePoint Online sites in the Contoso West tenant. The solution must not require any additional Microsoft 365 licenses.
 Invite the Contose East users as guests in the Contoso West tenant
+
 --
 Microsoft Defender for Cloud Apps session policies require a Microsoft Entra Conditional Access policy to route the applicable application traffic through Conditional Access App Control. That Conditional Access policy establishes the permissions and traffic control required for session control to operate.
+
 --
 technical requirements concerning the likelihood that user identities have been compromised
 users-> register MFA , you must configure -> user risk Conditional access policy 
 explanation : User risk is the probability that an identity is compromised, so the requirement calls for a user risk-based Conditional Access policy with the Require password change grant. A sign-in risk policy evaluates one sign-in, and password protection only blocks weak passwords. The forced change is a secure password change: the user first completes MFA and then changes the password. This flow doesn't use SSPR, and users who aren't registered for MFA can't complete it. Users must therefore register for MFA first, even though Contoso also plans to deploy SSPR (an SSPR reset also remediates user risk, but it isn't the mechanism this policy uses).
+
 ---
 (User Administrator, Device Administrators and Identity Governance Administrator) are Microsoft Entra roles, which you assign in the Microsoft Entra admin center. 
 Records Management and Quarantine Administrator are default role groups available in the Microsoft Purview portal 
 Endpoint Security Manager and Intune Role Administrator are Intune built-in RBAC roles, which you assign in the Microsoft Intune admin center
+
 --
 Eligible PIM assignments require activation; they do not grant the role automatically. Activation approval is required, and a delegated approver cannot approve their own role-activation request,
 A time-bound eligible user can activate the role only within the assignment's start and end dates, so the five-hour activation maximum 
 PIM approval request last 1 day
+
 ---
 MFA is required when activating this eligible Global administrator role.
 Approval to activate is disabled, so no approver, is required. User (Global Administrator) can manage the role assignment,
@@ -100,6 +121,7 @@ Microsoft Entra Connect enables Microsoft Entra hybrid join by synchronizing the
 
 The allow or block domains can receive B2B collaboration invitations -> Collaboration restrictions in External collaboration settings->Collaboration restrictions, which also control who can invite guests and guest user access restrictions. 
 MAU billing requires  Linked subscriptions.
+
 --
 never to install the Password Protection proxy and the application proxy connector on the same machine
 password protection proxy requires internet access (DC should not have)
@@ -113,6 +135,7 @@ OK: Setting each IT administrator’s manager property to the manager of the app
 You need to ensure that connections to  bypass Microsoft.com Global Secure Access.-> Microsoft traffic profile only
 
 Azure RBAC role assignments target a security principal's Microsoft Entra service principal, which is available regardless of region, so Managed1, Managed2, and the system-assigned identities of VM1 and VM2 can all receive the Owner role at the RG1 scope. VM3 has no system-assigned identity of its own -- it only uses the attached user-assigned identity Managed1, which is already the principal that receives the role -- so VM3 cannot itself be selected as a separate principal, and VM4 has no identity at all. For the same reason a user-assigned managed identity's service principal is region-independent, Managed2 (West US) can be attached to a virtual machine in any region, so VM1, VM2, VM3, and VM4 can all be assigned Managed2.
+
 ----------
 AZURE RBAC & MANAGED IDENTITIES ARCHITECTURE
 
@@ -153,6 +176,7 @@ Core Principle: Azure RBAC targets Entra ID Service Principals, which are global
 Role Delegation: Role assignments are bound to the identity (Managed1, Managed2, VM1/VM2 System IDs), not to the physical VM resource itself.
 
 Identity Mobility: User-Assigned Identities (like Managed2) can be associated with resources residing in any region.
+
 -----------
 first step Global Secure Access -> enable global secure access signaling
 
@@ -208,6 +232,7 @@ on-premises account lockout policies apply to Microsoft Entra sign-ins -> passth
 
 Permissions Management tab - Identify all the accounts that are assigned the Global Administrator role permanently - Insights
 Permissions Management tab - revire user Permission Creep Index - Analytics
+
 -
 CA policy assignment user risk or signin-risk level - User1 can sign in from an anonymous IP address? -> Anonymous IP address is a sign-in risk detection and triggers only this assignment ; Users who aren't registered for MFA can't complete the remediation that a risk-based policy requires are blocked and cannot sign-in
 
@@ -228,6 +253,7 @@ After AU1 is changed to Dynamic User, the dynamic membership engine alone contro
 Upon completion settings -> action for reviewers or nonresponses to remove access
 
 app  run as a service with no user interaction - Microsoft graph permissions -> application permissions
+
 ---
 The Permissions Management Administrator built-in role can manage all aspects of Microsoft Entra Permissions Management
 
@@ -249,50 +275,68 @@ Delegate the ability to create new virtual machines: -> Azure RBAC
 cloud platforms can Permissions Management manage: Aws - GCP
 
 User Administrator : manage license assignments and reset user passwords
+
 --
 self-service sign-up for App1
 Guest users must be able to sign up by using an email one-time passcode -> identity provider
 User details (name,city,email) -> user flow
+
 --
 admin consent for delegated Microsoft Graph permissions - users can review and approve the admin consent requests -> Cloud Application Administrator and Application Administrator
+
 --
 Guest users  access to App1. ensure that guest users who have not accessed App1 in the last 30 days have their access removed -> access review for application access
+
 --
 installation of the Microsoft Entra private network connector (application proxy) -> Application administrator
 user can register App -> Application developer
+
 --
 When you try to invite a new guest user from adatum.com to contoso.com, an error message appears.
 You can successfully invite a new guest user from fabrikam.com to contoso.com.
 You need to be able to invite new guest users from adatum.com to contoso.com. -> collaboration restrictions
+
 --
 etermine which users accepted or declined Terms1(ToU) -> audit logs
+
 --
 need to implement a sign-in risk-based Conditional Access policy that remediates risk without blocking user access -> MFA
+
 --
 deploy a third-party SaaS , onboard on  Microsoft Defender for Cloud Apps , ensure session control policies -> SSO for app
+
 --
 Users report that they cannot sign in to the virtual machines with their Microsoft Entra credentials. -> ensure VM access https://enterpriseregistration.windows.net
+
 --
 use the Azure portal to create a custom Azure subscription role named Role3. Role3 will use the baseline permissions from an existing role-> builtin Azure subscription roles and Role2 only
+
 --
 Create a user risk-based Conditional Access policy -> conditional access administrator and Security administrator
 view Risky user report -> Security administrator and Security operator
+
 --
 see a Spanish sign-in form -> Company branding settings
+
 --
 administrative-unit-scoped User Administrator can manage only direct members of that administrative unit users and groups but not users not in AU but in groups
+
 --
 on premise exchange , need to obtain Global administrator privileges that contains the self-service sign-up users -> create self-service signup user account in the tenant , signin 365 admin center, respond to become admin message , create DNS TXT
+
 --
 Risk detections report contains filterable data for up to the past 90 days
+
 --
 Microsoft SharePoint Online , stop users from printing the files directly from Site1 -> session policy
+
 --
 Key Vault Secrets Officer	Perform any action on the secrets of a key vault, except manage permissions.
 Key Vault Crypto Officer	Perform any action on the keys of a key vault, except manage permissions
 Key Vault Certificates Officer	Perform any action on the certificates of a key vault, except managing permissions
 Key Vault Reader	Read metadata of key vaults and its certificates, keys, and secrets
 Key Vault Secrets/Crypto/Certificate User -> read the contents
+
 --
 case study -> on-premises network of Contoso contains an Active Directory domain named contoso.com , 
 Contoso plans to acquire a company named ADatum Corporation. One hundred new ADatum users will be created in an Active Directory OU named Adatum
@@ -300,10 +344,12 @@ All users must be synced from AD DS to the contoso.com Azure AD tenant
 need to synchronize the ADatum users
 -> from entra connect wizard , customize synchronzation options
 explanation : users created in the new Adatum OU are not synced until that OU is added to the filter. Rerunning the wizard and choosing Customize synchronization options lets you change domain and OU filtering and select the Adatum OU
+
 --
 Microsoft Entra role can be assigned only to a group created as role-assignable (isAssignableToRole - true)
 Privileged Authentication Administrator or a Global Administrator can change the credentials of, or reset the password for, members and owners of a role-assignable group
 Administrator assignment is Eligible. Signing in doesn't activate it: Admin must activate the role in PIM
+
 --
 Phishing-resistant authentication methods
 Windows Hello for Business
@@ -313,8 +359,10 @@ FIDO2 security keys
 Passkeys in Microsoft Authenticator
 Certificate-based authentication (CBA)
 https://learn.microsoft.com/en-us/entra/identity/authentication/overview-authentication
+
 ---
 organize related apps into categories in the My Apps portal. -> collections
+
 -
 Microsoft Entra Terms of Use policies are applied and enforced through Conditional Access policy
 -
@@ -334,16 +382,21 @@ configure user access -> access package
 enable collaboration with fabricam.com -> connected organization
 explanation:
 An access package in Microsoft Entra entitlement management defines the resources, roles, and request/assignment policies used to provide user access. A connected organization represents an external organization whose users can collaborate through entitlement management.
+
 ---
 AD DS) domain synchronized with a Microsoft Entra tenant - user authentication always validates passwords against the AD DS
 pass through authentication
 use -> entra connect
+
 ---
 A self-review assigns each user the review of that user’s own access (only the user)
+
 ---
 compare each user's role permissions -> 365 admin center (compare roles feature)
+
 ---
 The contractor must be able to authenticate as user@outlook.com -> New-MgInvitation ; inviting as guest
+
 --
 You need to implement access packages for Site1 and Team1. The solution must meet these requirements:
 
@@ -361,13 +414,17 @@ package2 Site1 and Team1
 
 ---
 Microsoft Entra Permissions Management to automatically monitor permissions and create and implement right-sized roles -> User Access Administrator
+
 ---
 With user consent disabled, app consent must be granted by The Application Administrator
+
 ---
 role activation -> check require approval -> user cannot approve his own activation
 A delegated approver enters business justification when approving a pending Microsoft Entra PIM role-activation request; required justification on activation is for requester, approver has ever one optional.
+
 ---
 need to block access to cloud apps when a user is assessed as high risk with Microsoft Defender -> access policy
+
 ---
 cross tenant access
 default settings
@@ -389,14 +446,19 @@ must ensure that users can request access to SharePoint Online site -> create ac
 User1 can onboard Sub1 to Permissions Management
 Sub1 : User access administrator
 Tenant: Permissions management administrator
+
 --
 Microsoft Entra Password Protection normalizes common character substitutions and fuzzy-matches -> most long C0ntoso,Pr0jectlitw@re, T@ilw1nd
+
 --
 Security Administrator - ensure that User1 is able to create Microsoft Defender for Cloud Apps session policies -> create conditional access policy and select use conditional access app control
+
 --
 configure an alert that triggers when an app requires high permissions and has been authorized by more than 20 users -> OAuth app policy
+
 ---
 cross-tenant synchronization , usi attribute mappings and not group sync -> only User1 (it will sync groups only when group synchronization is enabled)
+
 ---
 case study
 User3 - User administrator
@@ -412,24 +474,32 @@ The Microsoft Authenticator app
 resp: User3 SSPR require -> 2 methods
 auth method can be used -> Email,phone, Microsoft Authenticator app
 explanation : separate administrator SSPR policy to User administrator accounts, strong two-gate policy requires two authentication methods and prohibits security questions
+
 ---
 Microsoft Entra Permissions Management - identify managed identities that have assigned permissions and remove any permissions unused for 90 days minimize administrative effort -> autopilot rule
+
 --
 users report that they received an MFA prompt on their Microsoft Authenticator app without having initiated a sign-in request. -> enable Report suspicious activity , high user risk , CA policy -> you set Report suspicious activity to Enabled in the Authentication methods settings, and you create a Conditional Access policy that blocks access for users whose user risk is High
+
 --
 Global Administrator is a highly privileged Microsoft Entra role, so the group assigned that role is included in the highly privileged accounts insight. Security Operator is a privileged role assignment on the listed service principal, so SPrincipal1 is included in the privileged service-principals insight.
+
 ---
 prevent users from signing in to Viva Engage from high-risk locations -> access policy
+
 ---
 Create a Conditional Access App Control custom policy named Custom1, Configure Policy1 to use Custom1. -> defender,session
+
 --
 case study
 requirements
 Configure the User administrator role to require justification and approval to activate.
 You need to change the settings of the User administrator role to meet the technical requirements.
 -> require justification on activation , set all assignment to eligible
+
 --
 A Conditional Access persistent browser session control suppresses the “Stay signed in?” prompt, Conditional Access exclusions override inclusions.
+
 --
 “All internet resources with Global Secure Access” Conditional Access target authorizes -> the Microsoft traffic and Internet access tunnels
 Security profiles selected (profile1)-> Internet access profile 
@@ -439,27 +509,35 @@ Identify unused permissions assigned to applications and managed identities.
 Give users recommendations about permissions to remove.
 Remove unused permissions.
 role,use -> user access administrator , autopilot rule
+
 --
 exempt users from Boston office for MFA settings using CA -> named location with public IP address range
+
 --
 powershell command so Permission Management can onboard Sub1 -> New-AzRoleAssignment -ApplicationId b46c3ac5-9da6-418f-a849-0a07a10b3c6c -RoleDefinitionName ->Reader -Scope "/subscriptions/<subscriptionID>"
+
 --
 sequence to prevent users from accessing url from 500 window devices -> web content filtering policy , security profle , conditional access policy
+
 --
 A web application registration must include a redirect URI
+
 --
 case study
 Configure multi-factor authentication (MFA) for all users.
 Users must be prompted to register for MFA and given an option to skip registration for a grace period.
 -> MFA registration policy , 14 days
 The Microsoft Entra ID Protection MFA registration policy prompts users to register during interactive sign-in. Users can bypass registration for 14 days when MFA is not otherwise required, after which registration is required to complete sign-in.
+
 --
 case study
 issue : Anyone in the organization can invite guest users, including other guests and non-administrators
 You need to address the guest-user invitation issue.
 modify external collaboration settings
+
 ---
 For an access package, Microsoft Entra permits Global Administrators, Identity Governance Administrators, the relevant catalog owner, and the relevant access package manager to create and manage access reviews
+
 ---
 case study 
 When you try to assign the Device Administrators role to IT_Group1, the group does not appear in the selection list.
@@ -474,26 +552,33 @@ requirement: Trust relationships must not be established between the adatum.com 
 planned change : Synchronize the AD DS users and groups of litware.com with the Azure AD tenant
 -> microsoft entra cloud sync
 explanation: Microsoft Entra Cloud Sync is designed to synchronize a new, disconnected AD DS forest to the same Microsoft Entra tenant when an existing forest is already synchronized by Microsoft Entra Connect Sync. This supports the requirement to avoid establishing a trust between adatum.com and litware.com
+
 ---
 case study
 solve : Multiple users in the sales department have up to five devices. The sales department users report that they sometimes must contact the support department to join their devices to the Azure AD tenant because they have reached their device limit.
 -> device settings
+
 ---
 case study
 Users assigned the User administrator role must be able to request permission to use the role when needed for up to one year
 -> set all assignments to Eligible, modify expire eligible assignment after setting
+
 ---
 Leaked credentials -> user risk CA
 sign-in from a suspicious browser: -> sign-in risk CA
 Resources accessed from an anonymous IP address: -> sign-in risk CA
+
 ---
 Because On activation, require Azure MFA (now named On activation, require multifactor authentication) is set to Yes, an eligible user must complete Microsoft Entra multifactor authentication to activate the role, and the activation’s maximum duration is eight hours. Users who already completed MFA earlier in the session might not be prompted again; use an authentication context with sign-in frequency Every time to force it. The role also requires approval. With no designated approvers, Microsoft Entra PIM uses Privileged Role Administrators and Global Administrators as default approvers.
+
 ---
 Catalog creators are assigned in ID Governance > Entitlement management > Settings.
+
 ---
 users connecting to the Microsoft 365 portal from an anonymous IP address are prompted to use multifactor authentication (MFA) -> CA sign-in risk condition
+
 ---
-q161
+
 
 
 
