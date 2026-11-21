@@ -507,6 +507,7 @@ A Conditional Access persistent browser session control suppresses the “Stay s
 --
 “All internet resources with Global Secure Access” Conditional Access target authorizes -> the Microsoft traffic and Internet access tunnels
 Security profiles selected (profile1)-> Internet access profile 
+
 --
 Microsoft Entra Permissions Management
 Identify unused permissions assigned to applications and managed identities.
@@ -549,6 +550,7 @@ resolve  IT_Group1 issue
 
 -> recreate the group
 A group must be created as a role-assignable group before it can receive a Microsoft Entra role such as Microsoft Entra Joined Device Local Administrator (the Device Administrators role in the scenario). The isAssignableToRole setting is available only when creating a new group and cannot be applied to an existing group
+
 ---
 case study: 
 Litware has an AD DS forest named litware.com.
