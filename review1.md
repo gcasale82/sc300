@@ -137,6 +137,7 @@ You need to ensure that connections to  bypass Microsoft.com Global Secure Acces
 Azure RBAC role assignments target a security principal's Microsoft Entra service principal, which is available regardless of region, so Managed1, Managed2, and the system-assigned identities of VM1 and VM2 can all receive the Owner role at the RG1 scope. VM3 has no system-assigned identity of its own -- it only uses the attached user-assigned identity Managed1, which is already the principal that receives the role -- so VM3 cannot itself be selected as a separate principal, and VM4 has no identity at all. For the same reason a user-assigned managed identity's service principal is region-independent, Managed2 (West US) can be attached to a virtual machine in any region, so VM1, VM2, VM3, and VM4 can all be assigned Managed2.
 
 ----------
+
 AZURE RBAC & MANAGED IDENTITIES ARCHITECTURE
 
 ├── SECURITY PRINCIPALS & REGIONAL SCOPE
