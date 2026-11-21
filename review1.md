@@ -138,7 +138,7 @@ Azure RBAC role assignments target a security principal's Microsoft Entra servic
 
 ----------
 
-'''text
+```text
 AZURE RBAC & MANAGED IDENTITIES ARCHITECTURE
 
 ├── SECURITY PRINCIPALS & REGIONAL SCOPE
@@ -172,7 +172,7 @@ AZURE RBAC & MANAGED IDENTITIES ARCHITECTURE
         ├── VM2 ──► Can attach Managed2
         ├── VM3 ──► Can attach Managed2
         └── VM4 ──► Can attach Managed2
-'''
+```
 
 Key Takeaways
 Core Principle: Azure RBAC targets Entra ID Service Principals, which are global entities independent of Azure regions.
