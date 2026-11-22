@@ -1,7 +1,9 @@
-emergency access accounts should be cloud-only rather than synchronized from on-premises AD DS, so they remain usable during an on-premises identity or synchronization outage. A Global Administrator emergency account can restore administrative access to the tenant.
+emergency access accounts should be cloud-only rather than synchronized from on-premises AD DS, so they remain usable during an on-premises identity or synchronization outage.
+A Global Administrator emergency account can restore administrative access to the tenant.
 --
 Storage Blob Data Reader can read blob content
-Condition2 targets only the blobs/write action: a read doesn't match that ActionMatches, so !(ActionMatches) is true and the condition allows the read. User2's Storage Blob Data Owner assignment on storage1 therefore lets User2 read blob1 in storage1 (Yes)
+Condition2 targets only the blobs/write action: a read doesn't match that ActionMatches, so !(ActionMatches) is true and the condition allows the read. User2's Storage Blob Data Owner assignment on storage1
+therefore lets User2 read blob1 in storage1 (Yes)
 --
 only user as owner of App
 --
@@ -10,7 +12,8 @@ need to identify discovered apps used in your organization that do not require u
 Ensure that User1 can create access reviews for groups -> User Administrator
 User2 can generate and review an access review history report that includes every completed access review. -> Security reader
 --
-Conditional Access Grant controls include Require multifactor authentication. Session controls include Sign-in frequency, which determines how long a user remains signed in before being prompted to authenticate again
+Conditional Access Grant controls include Require multifactor authentication. Session controls include Sign-in frequency, which determines how long a user remains signed in before being prompted to 
+authenticate again
 --
 The Global Secure Access client for Windows requires a 64-bit version of Windows 10 (LTSC 2021 or newer) or Windows 11. 
 On Microsoft Entra registered Windows devices, only Private Access traffic is supported
@@ -28,7 +31,8 @@ application collection named HR Apps,Applications: App1, App2, App3 ; Users and 
 Enabled for users to sign in: Yes ,User assignment required: Yes ,Visible to users: Yes
 ensure that users can also see App3
 -> add HRUsers
-A My Apps collection displays only applications that users are already assigned to. When user assignment is required, HRUsers must be assigned directly to App3 through its Users and groups settings. Assigning the group to the collection alone does not grant access to the application
+A My Apps collection displays only applications that users are already assigned to. When user assignment is required, HRUsers must be assigned directly to App3 through its Users and groups settings.
+Assigning the group to the collection alone does not grant access to the application
 --
 Enable a system-assigned managed identity for VM1.
 Add the system-assigned managed identity of VM1 to Group1.
@@ -51,7 +55,8 @@ You create an Azure Sentinel instance and configure the Azure Active Directory c
 You need to ensure that Azure Sentinel can generate incidents from risk alerts raised by Azure AD Identity Protection.
 -> add Sentinel data connector
 --
-The Helpdesk Administrator built-in role includes permissions to create and manage Microsoft 365 service requests, read and configure Service Health in the Microsoft 365 admin center, and create and manage Azure support tickets
+The Helpdesk Administrator built-in role includes permissions to create and manage Microsoft 365 service requests, read and configure Service Health in the Microsoft 365 admin center, and
+create and manage Azure support tickets
 --
 Users assigned Role1 can create or delete Azure Container Apps instances -> role -> Microsof.App
 Users assigned Role2 can enforce adaptive network hardening rules -> Microsoft.Security
@@ -68,12 +73,15 @@ Scenario: EntraID <-> on premise AD sync ; user from Internet auth firewall with
 use the firewall logs to create a list of unmanaged external applications and the users who access them
 -> Cloud Discovery in Microsoft Defender for Cloud Apps
 ---
-PIM can manage just-in-time assignments for all Microsoft Entra roles, such as Global Administrator and Security Administrator, and for all Azure roles, both built-in and custom, such as Microsoft Sentinel Contributor. PIM can't manage the classic subscription administrator roles: Account Administrator, Service Administrator and Co-Administrator.
+PIM can manage just-in-time assignments for all Microsoft Entra roles, such as Global Administrator and Security Administrator, and for all Azure roles, both built-in and custom, such as Microsoft 
+Sentinel Contributor. PIM can't manage the classic subscription administrator roles: Account Administrator, Service Administrator and Co-Administrator.
 ---
 ensure that Microsoft Entra Password Protection continues to function if one server fails -> Microsoft Entra Password Protection proxy service
-Microsoft Entra Password Protection uses proxy servers to obtain policy data from the cloud for on-premises domain controllers. Microsoft recommends at least two Password Protection proxy servers per forest for redundancy
+Microsoft Entra Password Protection uses proxy servers to obtain policy data from the cloud for on-premises domain controllers. Microsoft recommends at least two Password Protection proxy servers per
+forest for redundancy
 ---
-Active Directory forest connected using Microsoft Entra Connect Sync - need to prevent synchronization of users whose extensionAttribute set to NoSync -> inbound synchronization rule for the Active Directory Domain Services connector
+Active Directory forest connected using Microsoft Entra Connect Sync - need to prevent synchronization of users whose extensionAttribute set to NoSync -> inbound synchronization rule for the Active
+Directory Domain Services connector
 --
 Global Secure Access client to the devices by using Intune - private access to App1 -> deploy private network connector
 --
@@ -87,7 +95,8 @@ Cross-tenant synchronization, group1+Scoping filter: Department EQUALS Marketing
 --
 CA user-risk = high action : reset password ; users have MFA configured and registered ; user1 has risk = medium; need to force User1 password reset -> confirm User1 as compromised.
 --
-PIM access review - make sure that users who do not respond to review requests are automatically removed from the roles, while minimizing administrative effort -> Reviewers: Members (self) , If reviewers don't respond: Remove access
+PIM access review - make sure that users who do not respond to review requests are automatically removed from the roles, while minimizing administrative effort -> Reviewers: Members (self) , If reviewers don't
+respond: Remove access
 --
 need to remove the Office 365 Enterprise E3 licenses from the users with the least administrative effort -> license page 365 admin center
 --
@@ -116,21 +125,25 @@ plan to connect Permissions Management to AWS
 ->New-AzureADApplication  -DisplayName "mciem-aws-oidc-connector" 
 -> -IdentifierUris "api://mciem-aws-oidc-app"
 ---
-Microsoft Entra application proxy publishes on-premises web applications for remote access through Microsoft Entra ID. Users sign in to Microsoft Entra ID before they reach the app (preauthentication), so Conditional Access and multifactor authentication apply to the published apps. For SharePoint Online, the Conditional Access session control Use app enforced restrictions applies SharePoint's site-level access settings, such as limited, web-only access from unmanaged devices.
+Microsoft Entra application proxy publishes on-premises web applications for remote access through Microsoft Entra ID. Users sign in to Microsoft Entra ID before they reach the app (preauthentication), 
+so Conditional Access and multifactor authentication apply to the published apps. For SharePoint Online, the Conditional Access session control Use app enforced restrictions applies SharePoint's site-level access settings, such as limited, web-only access from unmanaged devices.
 -> publish with application proxy
 -> app-enforced restriction
 --
 Conditional Access template policies that target users automatically exclude only the user who creates the policy
 --
-A User Administrator assigned at an administrative-unit scope can reset passwords only for users who are direct members of that administrative unit. Adding Group1 to Au1 scopes management of the group itself, not management of Group1’s individual members.
+A User Administrator assigned at an administrative-unit scope can reset passwords only for users who are direct members of that administrative unit. Adding Group1 to Au1 scopes management of the group itself,
+not management of Group1’s individual members.
 --
 You need to ensure that Microsoft Entra ID Protection can detect leaked credentials for the users synchronized from adatum.com
-Password hash synchronization enables Microsoft Entra ID Protection to detect leaked credentials for hybrid accounts by validating newly discovered compromised credentials against current synchronized password hashes. Only credentials discovered after PHS is enabled are processed
+Password hash synchronization enables Microsoft Entra ID Protection to detect leaked credentials for hybrid accounts by validating newly discovered compromised credentials against current synchronized password 
+hashes. Only credentials discovered after PHS is enabled are processed
 --
 Microsoft Entra Cloud Sync, scoping filter : CN=Group1,OU=OU1,DC=contoso,DC=com -> users of group1 and group1, user of group2 excluded, users of nested group are excluded
 --
 Which user can create appointments in every user's calendar at the company?-> User2 , app2 permissions = calendar read and write for application
-Microsoft Graph Calendars.ReadWrite as an application permission allows an app to create, read, update, and delete events in all calendars without a signed-in user. User2 uses App2, which has that application permission
+Microsoft Graph Calendars.ReadWrite as an application permission allows an app to create, read, update, and delete events in all calendars without a signed-in user. User2 uses App2, which has that application
+permission
 --
 dynamic membership group named LWGroup1 that contains all Litware user accounts but excludes all guest accounts
 -> user.objectId -ne ->null and (user.userType -eq ->"Member")
