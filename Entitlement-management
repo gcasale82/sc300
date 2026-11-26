@@ -1,6 +1,8 @@
-
+================================================================================
 
         MICROSOFT ENTRA ID ENTITLEMENT MANAGEMENT: CATALOG ROLES
+
+================================================================================
 
 
 
@@ -72,11 +74,11 @@
 
 
 
-
+================================================================================
 
 QUICK CHEAT SHEET (LEAST PRIVILEGE RULE)
 
-
+================================================================================
 
 * Add/Remove Resources to Catalog?  --> Catalog owner
 
@@ -86,11 +88,11 @@ QUICK CHEAT SHEET (LEAST PRIVILEGE RULE)
 
 * View/Audit Only?                  --> Catalog reader
 ---
-
+================================================================================
 
         MICROSOFT ENTRA ID: CREATING AN ACCESS PACKAGE (MIND MAP)
 
-
+================================================================================
 
 
 
@@ -242,11 +244,11 @@ QUICK CHEAT SHEET (LEAST PRIVILEGE RULE)
 
 
 
-
+================================================================================
 
 KEY SC-300 EXAM TRAPS TO REMEMBER
 
-
+================================================================================
 
 * Multiple Policies: One Access Package = One set of Resources, but can have MULTIPLE Policies (different requestor groups & approvers).
 
@@ -256,11 +258,12 @@ KEY SC-300 EXAM TRAPS TO REMEMBER
 
 * Max Approval Stages: Up to 3 sequential stages.
 
-
+================================================================================
+================================================================================
 
         MICROSOFT ENTRA ID: TERMS OF USE (ToU) - MIND MAP & EXAM TRAPS
 
-
+================================================================================
 
 
 
@@ -360,11 +363,11 @@ KEY SC-300 EXAM TRAPS TO REMEMBER
 
 
 
-
+================================================================================
 
 QUICK SC-300 EXAM CHECKLIST FOR TERMS OF USE
 
-
+================================================================================
 
 * File type?                     --> PDF only.
 
@@ -378,12 +381,12 @@ QUICK SC-300 EXAM CHECKLIST FOR TERMS OF USE
 
 * Updated PDF + force re-sign?   --> Must select "Require users to re-accept" during upload.
 
-
-
+================================================================================
+================================================================================
 
   ENTITLEMENT MANAGEMENT: CONNECTED ORGS, REVIEWS & LIFECYCLE SETTINGS
 
-
+================================================================================
 
 
 
@@ -493,11 +496,11 @@ QUICK SC-300 EXAM CHECKLIST FOR TERMS OF USE
 
 
 
-
+================================================================================
 
 QUICK SC-300 EXAM CHECKLIST
 
-
+================================================================================
 
 * Guest loses LAST access package?       --> Blocked from sign-in -> Deleted after X days (Control configurations).
 
@@ -509,4 +512,4 @@ QUICK SC-300 EXAM CHECKLIST
 
 * Hide who is approving a request?       --> Disable "Show approver details to members on pending access package requests".
 
-
+================================================================================
